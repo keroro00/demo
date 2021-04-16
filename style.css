@@ -1,11 +1,14 @@
-@media all and (max-width: 480px) {
+@media screen and (max-width: 480px) {
     body {
       background-color:red;
     }
   }
-  @media all and (min-width:480px) and (max-width: 900px) {
+  @media screen and (min-width:480px) and (max-width: 800px) {
     body {
       background-color: lightyellow;
     }
   }
   
+table caption {
+    font-size: 4em;
+}
