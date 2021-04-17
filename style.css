@@ -1,20 +1,58 @@
-@media screen and (min-width: 390px) and (max-width: 480px) {
-    body {
-      background-color:red;
-    }
-  }
-  @media screen and (min-width: 375px) and (max-width: 390px) {
-    body {
-      background-color: lightyellow;
-    }
-  }
+.column {
+    float: left;
+    width: 25%;
+}
 
-  @media screen and (max-width: 375px) {
-    body {
-      background-color: rgb(159, 41, 238);
-    }
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(95, 162, 224);
+    position: fixed;
+    top: 0;
+    width: 100%;
   }
   
-table caption {
-    font-size: 4em;
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: rgba(38, 144, 158, 0.781);
+  }
+  
+  .active {
+    background-color: #1f5899;
+  }
+
+  .show {
+    display:none;
+  }
+
+@media all and (max-width: 480px) {
+    body {
+      background-color:rgba(146, 194, 226, 0.877);
+    }
+    .column { width: 100%; }
+    
+    .hide {display:none;}
+    .show {display:block}
+
+}
+
+@media all and (min-width: 480px) and (max-width: 800px) {
+    .column { width: 50%; }
+    body{
+        background-color:rgba(170, 178, 184, 0.911);
+    }
 }
