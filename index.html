@@ -8,38 +8,46 @@
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="shortcut icon"  href="https://w7.pngwing.com/pngs/496/143/png-transparent-drawing-sgt-frog-chibi-chibi-comics-chibi-vertebrate-thumbnail.png">
     <link rel="apple-touch-icon"  href="https://w7.pngwing.com/pngs/496/143/png-transparent-drawing-sgt-frog-chibi-chibi-comics-chibi-vertebrate-thumbnail.png"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    
     <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
 
     <style>
          
     </style>
     </head>
-    <body>
-        <div class="navbar">
-            <div class="hide">
-                <a href="#home">Home</a>
-                <a href="#news">News</a>
-            </div>
+    <body onload="initialize()">
+        <script src="app.js"></script>
+
+        <form action="/action_page.php">
+            <label for="cars">Choose a place:</label>
+            <select name="places" id="places" onchange="retrieveTemperature()">
+              <optgroup label="Kowloon">
+                <option value="Kwun Tong">Kwun Tong</option>
+                <option value="Sham Shui Po">Sham Shui Po</option>
+              </optgroup>
+              <optgroup label="Other">
+                <option value="Tai Po">Tai Po</option>
+                <option value="Sai Kung">Sai Kung</option>
+              </optgroup>
+            </select>
+            <br><br>
         
-            <div class="dropdown show">
-              <button class="dropbtn">Team
-                <i class="fa fa-caret-down"></i>
-              </button>
-              <div class="dropdown-content">
-                <a href="keroro.html">Kerorochange</a>
-                <a href="tamama.html">Tamama</a>
-                <a href="#">Dororo</a>
-              </div>
-            </div> 
-          </div>
-        Sunny
-      
+          </form>
+        <table>
+            <caption>Information<div id="status"></div></caption>
+            <thead>
+                <tr>
+                    <th>place</th>
+                    <th>value</th>
+                    <th>unit</th>
+                </tr>
+            </thead>
+            <tbody id="ttemperature">
+            </tbody>
+
+        </table>
+
            
            
     </body>

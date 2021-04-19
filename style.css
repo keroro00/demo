@@ -1,84 +1,66 @@
-.column {
-    float: left;
-    width: 25%;
+body{
+    background-image: url('https://imgur.dcard.tw/GTBK3NRh.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;  
+     background-size: cover;  
 }
 
-.navbar {
-  overflow: hidden;
-  background-color: #333;
+table {
+    width: 100%;
+    table-layout: fixed;
 }
 
-.navbar a {
-  float: left;
-  font-size: 16px;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+table caption {
+    font-size: 2em;
 }
 
-.dropdown {
-  float: left;
-  overflow: hidden;
+table td,
+table th {
+    border: 1px solid #000000;
+    text-align: center;
 }
 
-.dropdown .dropbtn {
-  font-size: 16px;  
-  border: none;
-  outline: none;
-  color: white;
-  padding: 14px 16px;
-  background-color: inherit;
-  font-family: inherit;
-  margin: 0;
+table th {
+    text-transform: uppercase;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  float: none;
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  text-align: left;
-}
-
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.show {display:none;}
-
-@media all and (max-width: 480px) {
-    body {
-      background-color:rgba(146, 194, 226, 0.877);
+@media screen and (max-width: 600px) {
+    table caption {
+        font-size: 1.5em;
     }
-    .column { width: 100%; }
-    
-    .hide {display:none;}
-    .show {display:block;}
 
-}
+    /* Hide table header. */
+    table thead {
+        display:none
+    }
 
-@media all and (min-width: 480px) and (max-width: 800px) {
-    .column { width: 50%; }
-    body{
-        background-color:rgba(170, 178, 184, 0.911);
+    /* Force table to not be like tables. */
+    table tr {
+        display: block;
+        margin-bottom: 1em;
+    }
+
+    /* Behave like a "row" */
+    table td {
+        display: block;
+        text-align: right;
+        border-bottom: 0px;
+    }
+
+    /* Behave like a table header */
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+        border: 1px solid #000000;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
     }
 }
