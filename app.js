@@ -10,6 +10,7 @@ function initialize() {
             if (temperature) {
                 displayTemperature(JSON.parse(temperature.data));
             }
+        //getElementById("weather").style = 
         }
     }
 
