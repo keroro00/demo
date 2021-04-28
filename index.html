@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <video autoplay muted loop id="myVideo">
-  <source src="Rain - 28236.mp4" type="video/mp4">
-</video>
+        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1 user-scalable=0">
     <title>天文台</title>
@@ -21,7 +19,9 @@
     </head>
     <body onload="initialize()" style="background-image: url('https://imgur.dcard.tw/GTBK3NRh.jpg'); ">
         <script src="app.js"></script>
-
+        <video autoplay muted loop id="myVideo">
+  <source src="Rain - 28236.mp4" type="video/mp4">
+</video>
         <form action="/action_page.php">
             <label for="cars">Choose a place:</label>
             <select name="places" id="places" onchange="retrieveTemperature()">
