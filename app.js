@@ -6,7 +6,7 @@ function initialize() {
     } else {
         const localStorage = window.localStorage;
         if (localStorage) {
-            const temperature = localStorage.getItem("temperature.datadldldldldldldld");
+            const temperature = localStorage.getItem("temperature.data");
             if (temperature) {
                 displayTemperature(JSON.parse(temperature.data));
             }
