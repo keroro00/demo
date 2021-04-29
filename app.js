@@ -1,5 +1,6 @@
 function initialize() {
     var status = "* Offline *";
+    //var weatherback = getElementById("weather");  grab the background
     if (navigator.onLine) {
         status = "* Online *";
         retrieveTemperature();
@@ -10,7 +11,11 @@ function initialize() {
             if (temperature) {
                 displayTemperature(JSON.parse(temperature.data));
             }
-        //getElementById("weather").style = 
+        //if (weather= sunny){
+        //  if (time is within 0800to 1000){weatherback.style =} Set the background
+        //wlse if (weather= cloudy){weatherback.style =}
+        //else if (weather=  rainy){weatherback.style =}
+        //
         }
     }
 
