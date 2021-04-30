@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1 user-scalable=0">
     <title>天文台</title>
@@ -17,11 +16,9 @@
          
     </style>
     </head>
-    <body  id="weather" onload="initialize()" style="blank"); ">
+    <body onload="initialize()">
         <script src="app.js"></script>
-        <video autoplay muted loop id="myVideo">
-  <source src="Rain - 28236.mp4" type="video/mp4">
-</video>
+
         <form action="/action_page.php">
             <label for="cars">Choose a place:</label>
             <select name="places" id="places" onchange="retrieveTemperature()">
@@ -36,24 +33,19 @@
             </select>
             <br><br>
         
-          </form>
-        <table>
-            <caption>Information<div id="status"></div></caption>
-            <thead>
-                <tr>
-                    <th>place</th>
-                    <th>value</th>
-                    <th>unit</th>
-                </tr>
-            </thead>
-            <tbody id="ttemperature">
-            </tbody>
+        </form>
+        <div  class="TodayDetail"><img src="" alt="Today weather" id="TodayIcon" width="150" height="150"><div id="TodayTemp"></div></div>  
+    </br></br>
+            <table>
+                <thead>
+                <tr id="forecastIcon"></tr>
+                <tr id="forecastDate"></tr>
+                <tr id="forecastWeek"></tr>
+                <tr id="forecastTemp"></tr>
+             
+            </table>
+   
 
-        </table>
-        
-        <p>TESTING</p>
-        <p>felixkwok</p>
-        <p>hi</p>
            
            
     </body>

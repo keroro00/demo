@@ -5,7 +5,12 @@ body{
      background-size: cover;  
 }
 
-table {
+.TodayDetail {
+    width: 50%;
+    margin: 0 auto;
+  }
+
+/*table {
     width: 100%;
     table-layout: fixed;
 }
@@ -29,25 +34,25 @@ table th {
         font-size: 1.5em;
     }
 
-    /* Hide table header. */
+
     table thead {
         display:none
     }
 
-    /* Force table to not be like tables. */
+ 
     table tr {
         display: block;
         margin-bottom: 1em;
     }
 
-    /* Behave like a "row" */
+
     table td {
         display: block;
         text-align: right;
         border-bottom: 0px;
     }
 
-    /* Behave like a table header */
+
     table td::before {
         content: attr(data-label);
         float: left;
@@ -64,3 +69,4 @@ table th {
         background-color: #dddddd;
     }
 }
+*/

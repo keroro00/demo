@@ -1,41 +1,16 @@
 function initialize() {
-    var status = "* Offline *";
-    //var weatherback = getElementById("weather");  grab the background
-    if (navigator.onLine) {
-        status = "* Online *";
+
         retrieveTemperature();
-    } else {
-        const localStorage = window.localStorage;
-        if (localStorage) {
-            const temperature = localStorage.getItem("temperature.data");
-            if (temperature) {
-                displayTemperature(JSON.parse(temperature.data));
-            }
+        retrieveForecast();
+      //var weatherback = getElementById("weather");  grab the background
+        //getElementById("weather").style = 
         //if (weather= sunny){
         //  if (time is within 0800to 1000){weatherback.style =} Set the background
         //wlse if (weather= cloudy){weatherback.style =}
         //else if (weather=  rainy){weatherback.style =}
         //
-        }
-    }
-
-    document.getElementById("status").innerHTML = status;
-
-    document.body.addEventListener(
-            "online",
-            function () {
-                document.getElementById("status").innerHTML = "Online";
-            },
-            false
-            );
-    document.body.addEventListener(
-            "offline",
-            function () {
-                document.getElementById("status").innerHTML = "Offline";
-            },
-            false
-            );
 }
+
 
 function retrieveTemperature() {
     const xhr = new XMLHttpRequest();
@@ -44,12 +19,15 @@ function retrieveTemperature() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             var temperature = JSON.parse(xhr.response).temperature;
-            displayTemperature(temperature);
+ 
+            var todayIcon= JSON.parse(xhr.response).icon;
+            displayToday(todayIcon,temperature);
 
-            // Store contact data to localstorage
+
             const localStorage = window.localStorage;
             if (localStorage) {
                 localStorage.setItem("temperature", JSON.stringify(temperature));
+                localStorage.setItem("icon", JSON.stringify(TodayIcon));
             }
         }
     };
@@ -58,29 +36,62 @@ function retrieveTemperature() {
     xhr.send();
 }
 
-function displayTemperature(temperature) {
-    document.getElementById("ttemperature").innerHTML="";
+
+function retrieveForecast() {
+    const xhr = new XMLHttpRequest();
+    const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc";
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var forecast = JSON.parse(xhr.response).weatherForecast;
+            displayForecast(forecast);
+
+  
+            const localStorage = window.localStorage;
+            if (localStorage) {
+                localStorage.setItem("forecast", JSON.stringify(forecast));
+            }
+        }
+    };
+
+    xhr.open("get", url);
+    xhr.send();
+}
+
+function displayToday(todayIcon,temperature){
+    
+    document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     for (i=0;i<temperature.data.length;i++){
         if (temperature.data[i].place==document.getElementById("places").value){
-            addRow(temperature.data[i]);
+            document.getElementById("TodayTemp").innerHTML=temperature.data[i].place +" "+ temperature.data[i].value + "°C";
         }
-
     }
 }
 
+function displayForecast(forecast) {
+    forecast.forEach(addRowForecast);
 
-function addRow(temperature) {
-    var ttemperature = document.getElementById("ttemperature");
-    var row = ttemperature.insertRow();
-    var placeCell = row.insertCell();
-    placeCell.setAttribute('data-label', "place");
-    placeCell.innerHTML = temperature.place;
+}
+function addRowForecast(forecast) {
+    var forecastIcon = document.getElementById("forecastIcon");
+    var Iconrow = forecastIcon.insertCell();
+    var Iconurl = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+forecast.ForecastIcon+".png"
+    Iconrow.setAttribute('data-label', "icon");
+    Iconrow.innerHTML = "<img src= "+Iconurl+" width=\"50\" height=\"50\">";
 
-    var valueCell = row.insertCell();
-    valueCell.setAttribute('data-label', "value");
-    valueCell.innerHTML = temperature.value;
+    var forecastDate = document.getElementById("forecastDate");
+    var Daterow = forecastDate.insertCell();
+    Daterow.setAttribute('data-label', "date");
+    Daterow.innerHTML = forecast.forecastDate.substring(4, 6)+"/"+forecast.forecastDate.substring(6, 8);
 
-    var unitCell = row.insertCell();
-    unitCell.setAttribute('data-label', "unit");
-    unitCell.innerHTML = temperature.unit;
+    var forecastWeek = document.getElementById("forecastWeek");
+    var Weekrow = forecastWeek.insertCell();
+    Weekrow.setAttribute('data-label', "week");
+    Weekrow.innerHTML = forecast.week;
+
+    var forecastTemp = document.getElementById("forecastTemp");
+    var Temprow = forecastTemp.insertCell();
+    Temprow.setAttribute('data-label', "temp");
+    Temprow.innerHTML = forecast.forecastMaxtemp.value+"°C";
+
 }
