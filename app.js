@@ -3,12 +3,14 @@ function initialize() {
         retrieveTemperature();
         retrieveForecast();
         retrieveSituation();
-      //var weatherback = getElementById("weather");  grab the background
-        //getElementById("weather").style = 
-        //if (weather= sunny){
-        //  if (time is within 0800to 1000){weatherback.style =} Set the background
-        //wlse if (weather= cloudy){weatherback.style =}
-        //else if (weather=  rainy){weatherback.style =}
+        var weatherback = getElementById("weather");
+        
+        var weathericon = JSON.parse(xhr.response).icon;
+        
+        if (weathericon = 50){
+          {weatherback.style = "06_1596083776.mp4"}//if (time is within 0800to 1000)
+        else if (weathericon = 63){weatherback.style = "Rain - 28236.mp4"}
+        //else if (weathericon = 50){weatherback.style =}
         //
 }
 
