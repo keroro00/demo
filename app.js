@@ -2,6 +2,7 @@ function initialize() {
 
         retrieveTemperature();
         retrieveForecast();
+        retrieveSituation();
       //var weatherback = getElementById("weather");  grab the background
         //getElementById("weather").style = 
         //if (weather= sunny){
@@ -58,6 +59,33 @@ function retrieveForecast() {
     xhr.send();
 }
 
+function retrieveSituation() {
+    const xhr = new XMLHttpRequest();
+    const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc";
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var situation= JSON.parse(xhr.response).generalSituation;
+            var forecastPeriod= JSON.parse(xhr.response).forecastPeriod;
+            var forecastDesc= JSON.parse(xhr.response).forecastDesc;
+            var outlook= JSON.parse(xhr.response).outlook;
+            displayText(situation,forecastPeriod,forecastDesc,outlook);
+
+  
+            const localStorage = window.localStorage;
+            if (localStorage) {
+                localStorage.setItem("situation", JSON.stringify(situation));
+                localStorage.setItem("forecastPeriod", JSON.stringify(forecastPeriod));
+                localStorage.setItem("forecastDesc", JSON.stringify(forecastDesc));
+                localStorage.setItem("outlook", JSON.stringify(outlook));
+            }
+        }
+    };
+
+    xhr.open("get", url);
+    xhr.send();
+}
+
 function displayToday(todayIcon,temperature){
     
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
@@ -70,8 +98,14 @@ function displayToday(todayIcon,temperature){
 
 function displayForecast(forecast) {
     forecast.forEach(addRowForecast);
-
 }
+
+function displayText(situation,forecastPeriod,forecastDesc,outlook) {
+    document.getElementById("WeatherSituation").innerHTML=situation+"</br>"+forecastPeriod+"</br>"+forecastDesc+"</br>"+outlook;
+}
+
+
+
 function addRowForecast(forecast) {
     var forecastIcon = document.getElementById("forecastIcon");
     var Iconrow = forecastIcon.insertCell();
