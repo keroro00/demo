@@ -3,9 +3,9 @@ function initialize() {
         retrieveTemperature();
         retrieveForecast();
         retrieveSituation();
-        var weatherback = getElementById("weather");
+//        var weatherback = getElementById("weather");
         
-        var weathericon = JSON.parse(xhr.response).icon;
+//        var weathericon = JSON.parse(xhr.response).icon;
         
 //         if (weathericon = 50){
 //           {weatherback.src = "06_1596083776.mp4"}//if (time is within 0800to 1000)
