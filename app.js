@@ -3,7 +3,7 @@ function initialize() {
         retrieveTemperature();
         retrieveForecast();
         retrieveSituation();
-      /*  var weatherback = getElementById("weather");
+        var weatherback = getElementById("weather");
         
         var weathericon = JSON.parse(xhr.response).icon;
         
