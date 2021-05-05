@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+	<title>Weather map</title>
+	<script src="js/map.js"></script>
+</head>
+
+<body onload="TestGeo()">
+	
+	<div id="map"></div>
+
+	<script 
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtlaCz15ImfzCJnn5uPyQzPe3CgyBo2Co&map_ids=69f157b099d4f8cd&callback=initMap"
+		async>
+	</script>
+
+	<div id="address">Geocoding...</div>
+
+</body>
+</html>
