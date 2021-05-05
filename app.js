@@ -7,9 +7,9 @@ function initialize() {
         
         var weathericon = JSON.parse(xhr.response).icon;
         
-        if (weathericon = 50){
-          {weatherback.src = "06_1596083776.mp4"}//if (time is within 0800to 1000)
-        else if (weathericon = 63){weatherback.src = "Rain - 28236.mp4"}
+//         if (weathericon = 50){
+//           {weatherback.src = "06_1596083776.mp4"}//if (time is within 0800to 1000)
+//         else if (weathericon = 63){weatherback.src = "Rain - 28236.mp4"}
         //else if (weathericon = 50){weatherback.style =}
         //
 }
