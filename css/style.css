@@ -17,11 +17,11 @@
     min-width: 100%;
     min-height: 100%;
   }
-  
+
   /* Add some content at the bottom of the video/page */
   .maincontent {
     position: fixed;
-    
+
 
     background: rgba(0, 0, 0, 0.5);
     color: #f1f1f1;
@@ -29,7 +29,7 @@
     height: 100%;
     padding: 20px;
   }
-  
+
   /* Style the button used to pause/play the video */
   #myBtn {
     width: 200px;
@@ -40,11 +40,23 @@
     color: #fff;
     cursor: pointer;
   }
-  
+
   #myBtn:hover {
     background: #ddd;
     color: black;
-  }   
+  }
+
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .navbar {
+    background: rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+  }
+
+
 /*table {
     width: 100%;
     table-layout: fixed;
@@ -74,7 +86,7 @@ table th {
         display:none
     }
 
- 
+
     table tr {
         display: block;
         margin-bottom: 1em;
@@ -116,3 +128,32 @@ table th {
   width: 100%;
   /* The width is the width of the web page */
 }
+
+
+
+/*@media (max-width: 768px) {
+    .navbar-collapse {
+        position: absolute;
+        top: 54px;
+        left: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 15px;
+        width: 100%;
+    }
+    .navbar-collapse.collapsing {
+        height: auto;
+        -webkit-transition: left 0.3s ease;
+        -o-transition: left 0.3s ease;
+        -moz-transition: left 0.3s ease;
+        transition: left 0.3s ease;
+        left: -100%;
+    }
+    .navbar-collapse.show {
+        left: 0;
+        -webkit-transition: left 0.3s ease-in;
+        -o-transition: left 0.3s ease-in;
+        -moz-transition: left 0.3s ease-in;
+        transition: left 0.3s ease-in;
+    }
+}*/
