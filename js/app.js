@@ -182,9 +182,15 @@ function retrieveSituation() {
 //Calculate Which station is near to user and show the temperature of it
 function whereNear(temperature){
     var minimum = 1;
-    var stationId = -1;
-    latitudeOfUser = sessionStorage.getItem("latitude");
-    longitudeOfUser = sessionStorage.getItem("longitude");
+    var stationId;
+   if (sessionStorage.getItem("latitude")!= null & sessionStorage.getItem("longitude")!= null){
+        latitudeOfUser = sessionStorage.getItem("latitude")
+        longitudeOfUser = sessionStorage.getItem("longitude")
+    }
+    else{
+        latitudeOfUser = localStorage.getItem("defaultLatitude");
+        longitudeOfUser = localStorage.getItem("defaultLongitude");
+    }
     for (i=0;i<9;i++){
         x = latitudeOfStation[i]-latitudeOfUser;
         y = longitudeOfStation[i]-longitudeOfUser;
