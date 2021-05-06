@@ -183,8 +183,8 @@ function retrieveSituation() {
 function whereNear(temperature){
     var minimum = 1;
     var stationId = -1;
-    latitudeOfUser = localStorage.getItem("defaultLatitude");
-    longitudeOfUser = localStorage.getItem("defaultLongitude");
+    latitudeOfUser = sessionStorage.getItem("latitude");
+    longitudeOfUser = sessionStorage.getItem("longitude");
     for (i=0;i<9;i++){
         x = latitudeOfStation[i]-latitudeOfUser;
         y = longitudeOfStation[i]-longitudeOfUser;
