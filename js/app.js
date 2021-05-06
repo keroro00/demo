@@ -1,4 +1,4 @@
-var gpsPremission = null;
+var gpsPermission = null;
 
 //set the default location
 localStorage.setItem("defaultLatitude", 22.28552);
@@ -194,7 +194,33 @@ function getLocation(position) {
     sessionStorage.setItem("longitude", longitude);
     console.log(latitude);
     console.log(longitude);
-    gpsPremission = true;
+    gpsPermission = true;
+    console.log("GPS premitted");
+    
+    //Update location once
+    displayLocation();
+    
+    // Update location every 5 mins
+    setInterval(function(){
+        if(gpsPermission == true || 
+        (sessionStorage.getItem("latitude") != null && 
+            sessionStorage.getItem("longitude") != null)){
+            console.log("Permission granted, using current location");
+            const latlng = { 
+                lat: parseFloat(sessionStorage.getItem("latitude")), 
+                lng: parseFloat(sessionStorage.getItem("longitude")) 
+            };
+            geoCoding(latlng);
+        }else if(gpsPermission == false){
+            console.log("No permission, using default location");
+            const latlng = { 
+                lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+                lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+            };
+            geoCoding(latlng);
+        }
+    }, 5000);
+    
 }
 
 //function that display any error inculde permission denied error
@@ -218,7 +244,58 @@ function positionError( error ) {
             console.error( "An unknown error occurred." ); 
             break; 
     }
-    gpsPremission = false;
-    initMap();
-    console.log(gpsPremission);
+    gpsPermission = false;
+    console.log("GPS permission denied");
+    displayLocation();  
+}
+
+//function for coding the geolocation from the marker's latitude and longitude
+function displayLocation(){
+    if(gpsPermission == true && 
+        (sessionStorage.getItem("latitude") != null && 
+            sessionStorage.getItem("longitude") != null)){
+        console.log("Permission granted, using current location");
+        const latlng = { 
+            lat: parseFloat(sessionStorage.getItem("latitude")), 
+            lng: parseFloat(sessionStorage.getItem("longitude")) 
+        };
+        geoCoding(latlng);
+    }else if(gpsPermission == false && 
+        (sessionStorage.getItem("latitude") != null && 
+            sessionStorage.getItem("longitude") != null)){
+        console.log("Permission denied, last found location found, using last found location");
+        const latlng = { 
+            lat: parseFloat(sessionStorage.getItem("latitude")), 
+            lng: parseFloat(sessionStorage.getItem("longitude")) 
+        };
+        geoCoding(latlng);
+    }else if(gpsPermission == false && 
+        (sessionStorage.getItem("latitude") == null && 
+            sessionStorage.getItem("longitude") == null)){
+        console.log("Permission denied, last found location not found, using default location");
+        const latlng = { 
+            lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+            lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+        };
+        geoCoding(latlng);
+    }
+    
+}
+
+function geoCoding(latlng){
+    const geocoder = new google.maps.Geocoder();
+    var display = document.getElementById("address");
+
+    geocoder.geocode({ location: latlng }, (results, status) => {
+    if (status === "OK") {
+        if (results[0]) {
+            console.log("Displaying location");
+            display.innerHTML = results[0].formatted_address;
+        }else {
+            window.alert("No results found");
+            }
+     }else {
+          window.alert("Geocoder failed due to: " + status);
+        }
+    });
 }
