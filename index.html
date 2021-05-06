@@ -3,29 +3,33 @@
 
 	<head>
 		<!-- Our web's name -->
-		<title></title>
+		<title>WeatherAppMainPage</title>
 
 		<meta charset="utf-8">
 		<!-- Must included -->
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<!--CSS-->
 		<link rel="stylesheet" href="css/style.css">
+		<!--Js-->
+		<script src="js/app.js"></script>
+		<script src="js/map.js"></script>
+
 	</head>
 
-<body class="main" onload="initialize()">
+<body class="main" onload="initialize()"><!--,TestGeo()-->
 
 
-	<!-- Title Navbar -->
-	<header class="navbar navbar-dark bg-dark sticky-top">
+<!-- Title Navbar -->
+<header class="navbar navbar-dark navbar-inverse sticky-top">
 		<!--When collapse become a menu-->
 		<button class="navbar-toggler" data-toggle="collapse" type="button" data-target="#mainNav">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
-		<nav class="collapse navbar-collapse bg-dark" id="mainNav">
+		<nav class="collapse navbar-collapse" id="mainNav">
 			<ul class="navbar-nav mr-auto">
 
 			<li class="nav-item">
@@ -43,51 +47,95 @@
 			</ul>
 
 		</nav>
-		</header>
+	</header>
 <!--the following is the main content of each page-->
-<script src="js/app.js"></script>
+
+<!--background-->
 <video autoplay muted loop id="myVideo">
 	<source src="source/Good.mp4" type="video/mp4">
   </video>
-<div class="maincontent">
-	<form action="/action_page.php">
-		<label for="cars">Choose a place:</label>
-		<select name="places" id="places" onchange="retrieveTemperature()">
-	  		<optgroup label="Kowloon">
-				<option value="Kwun Tong">Kwun Tong</option>
-				<option value="Sham Shui Po">Sham Shui Po</option>
-	  		</optgroup>
-	  		<optgroup label="Other">
-				<option value="Tai Po">Tai Po</option>
-				<option value="Sai Kung">Sai Kung</option>
-	  		</optgroup>
-		</select>
-	<br><br>
 
-	</form>
-	<div  class="TodayDetail"><img src="" alt="Today weather" id="TodayIcon" width="150" height="150"><div id="TodayTemp"></div></div>  
-	</br></br>
-	<!--<div id="WeatherSituation"></div> TOO many words-->
-	<div class="forecast">
-		<table>
-			<thead>
-			<tr id="forecastIcon"></tr>
-			<tr id="forecastDate"></tr>
-			<tr id="forecastWeek"></tr>
-			<tr id="forecastTemp"></tr>
-	 
-		</table>
+
+<div class="container-fluid maincontent">
+
+
+	<!--testing
+	<div class="row" style="background:lightblue">
+    <div class="col">
+      <p class="text-center">1 of 2</p>
+    </div>
+    <div class="col">
+      2 of 2
+    </div>
+  </div>-->
+
+	<!--select Button-->
+	<div class = "row justify-content-center">
+
+		<div class = "col">
+			<form class ="text-center" action="/action_page.php">
+				<label for="cars">Choose a place:</label>
+				<select name="places" id="places" onchange="retrieveTemperature()">
+			  		<optgroup label="Kowloon">
+						<option value="Kwun Tong">Kwun Tong</option>
+						<option value="Sham Shui Po">Sham Shui Po</option>
+			  		</optgroup>
+			  		<optgroup label="Other">
+						<option value="Tai Po">Tai Po</option>
+						<option value="Sai Kung">Sai Kung</option>
+			  		</optgroup>
+				</select>
+			<br><br>
+			</form>
+		</div>
+
 	</div>
-</div>
 
-   
-   
+
+	<!--Today Weather-->
+	<div class = "row justify-content-center">
+
+		<div class = "col">
+			<div class="text-center TodayDetail"><img src="" alt="Today weather" id="TodayIcon" width="150" height="150"><div id="TodayTemp"></div></div>
+			</br></br>
+		</div>
+	</div>
+
+	<!--<div id="WeatherSituation"></div> TOO many words-->
+
+	<!--Weekly Weather-->
+	<div class = "row justify-content-center">
+
+				<div class="col forecast">
+					<p class = "text-center">Weekly</p>
+					<table class="center">
+						<thead>
+						<tr id="forecastIcon"></tr>
+						<tr id="forecastDate"></tr>
+						<tr id="forecastWeek"></tr>
+						<tr id="forecastTemp"></tr>
+					</table>
+				</div>
+
+		</div>
+
+	<!--Map
+	<div class = "row justify-content-center">
+
+				<div class="col-6" id="map"></div>
+
+	</div>-->
+
+</div>
 
 
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtlaCz15ImfzCJnn5uPyQzPe3CgyBo2Co&map_ids=69f157b099d4f8cd&callback=initMap"
+		async>
+	</script>
 </body>
 </html>
