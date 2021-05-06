@@ -1,3 +1,4 @@
+/*
 var gpsPremission = null;
 
 //set the default location
@@ -36,6 +37,8 @@ function getLocation(position) {
 	gpsPremission = true;
 }
 
+
+
 //function that display any error inculde permission denied error
 //then the function will initialize the map with the last known/selected location
 function positionError( error ) { 
@@ -61,6 +64,8 @@ function positionError( error ) {
     initMap();
     console.log(gpsPremission);
 }
+
+*/
 
 //function that initialize the google map component
 function initMap(){
@@ -170,7 +175,7 @@ function initMap(){
     		marker.setMap(null);
     	}else
   		if(gpsPremission == true || (sessionStorage.getItem("latitude") != null && sessionStorage.getItem("longitude") != null)){
-    		const userLocation = { 
+    		userLocation = { 
     			lat: parseFloat(sessionStorage.getItem("latitude")), 
     			lng: parseFloat(sessionStorage.getItem("longitude")) 
     		};
@@ -198,7 +203,7 @@ function initMap(){
 	    var latLng = event.latLng;
 	    var lat = latLng.lat();
 	    var lng = latLng.lng();
-		const userLocation = { 
+		userLocation = { 
 			lat: parseFloat(lat), 
 			lng: parseFloat(lng) 
 		};

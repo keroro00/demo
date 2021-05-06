@@ -1,3 +1,15 @@
+var gpsPremission = null;
+
+//set the default location
+localStorage.setItem("defaultLatitude", 22.28552);
+localStorage.setItem("defaultLongitude", 114.15769);
+const userLocation = { 
+    lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+    lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+};
+
+
+
 function initialize() {
 
         retrieveTemperature();
@@ -19,6 +31,8 @@ function initialize() {
         else if (weathericon = 63){weatherback.style = "Rain - 28236.mp4"}*/
         //else if (weathericon = 50){weatherback.style =}
         //
+
+        TestGeo();
 }
 // Get the video
 var video = document.getElementById("myVideo");
@@ -152,4 +166,59 @@ function addRowForecast(forecast) {
     Temprow.setAttribute('data-label', "temp");
     Temprow.innerHTML = forecast.forecastMaxtemp.value+"°C";
 
+}
+
+
+//function that check if the brower support geolocation
+//if yes, then call the function getLocation
+//if no, then call the function positionError
+function TestGeo(){
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(getLocation, positionError, {
+            maximumAge: 30000, 
+            timeout: 10000, 
+            enableHighAccuracy: true});}
+    else{
+        alert("Sorry, but it looks like your browser does not support geolocation.");
+    }
+}
+
+//function that get the current location
+function getLocation(position) {
+    //get the latitude and longitude
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+
+    //save the current location for offline use
+    sessionStorage.setItem("latitude", latitude);
+    sessionStorage.setItem("longitude", longitude);
+    console.log(latitude);
+    console.log(longitude);
+    gpsPremission = true;
+}
+
+//function that display any error inculde permission denied error
+//then the function will initialize the map with the last known/selected location
+function positionError( error ) { 
+
+    switch ( error.code ) { 
+        case error.PERMISSION_DENIED:                   
+            console.error( "User denied the request for Geolocation." ); 
+            break; 
+
+        case error.POSITION_UNAVAILABLE:        
+            console.error( "Location information is unavailable." ); 
+            break; 
+
+        case error.TIMEOUT:         
+            console.error( "The request to get user location timed out." ); 
+            break; 
+
+        case error.UNKNOWN_ERROR: 
+            console.error( "An unknown error occurred." ); 
+            break; 
+    }
+    gpsPremission = false;
+    initMap();
+    console.log(gpsPremission);
 }
