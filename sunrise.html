@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/moment.js"></script>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <!-- jQuery library
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            var today = new moment();
+            // console.log(today);
+            console.log(today.format());
+            var todayYear = today.format("YYYY");
+            var todayMonth = today.format("MM");
+            var todayDay = today.format("DD");
+        $.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${todayYear}&month=${todayMonth}&day=${todayDay}`,function(srsdata){
+            console.log(srsdata);
+            // console.log(srsdata.data[0][1])
+            document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+            document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
+        },'json');
+
+        // function displaySRS(srsdata){
+        //    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+        // }
+        </script>
+        </head>
+        
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">Today Sunrise Time:</div>
+            <div class="col-sm-2"><p id="todaySunriseTime"></p></div>
+        </div>
+        <div class="row">    
+            <div class="col-sm-4">Today Sunset Time:</div>
+            <div class="col-sm-2"><p id="todaySunsetTime"></p></div>
+        </div>
+    </div>    
+</body>
+</html>

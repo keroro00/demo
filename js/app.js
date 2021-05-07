@@ -90,6 +90,7 @@ function initialize() {
         //
 
         TestGeo();
+        getSRS();
 }
 // Get the video
 var video = document.getElementById("myVideo");
@@ -386,3 +387,4 @@ function geoCoding(latlng){
         }
     });
 }
+
