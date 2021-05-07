@@ -204,7 +204,7 @@ function whereNear(temperature){
             stationId = i;
         }
     }
-    return (temperature.data[stationId].place +" "+ temperature.data[stationId].value + "°C");
+    return ( temperature.data[stationId].value + "°C");
 }
 
 //Display the weather of today
@@ -381,8 +381,8 @@ function displayLocation(){
 
 function geoCoding(latlng){
     const geocoder = new google.maps.Geocoder();
-    var display = document.getElementById("address");
-
+   // var display = document.getElementById("address");
+    var display = document.getElementById("location"); //The position below icon By Tony
     geocoder.geocode({ location: latlng }, (results, status) => {
     if (status === "OK") {
         if (results[0]) {
