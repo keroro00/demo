@@ -1,95 +1,50 @@
 
-var gpsPermission = null;
+var gpsPermission =  localStorage.getItem("gpsPermission");
 var gettingData = false;
 var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
 var geoJSON;
 var map;
+var marker;
 var request;
-
-//set the default location
-localStorage.setItem("defaultLatitude", 22.28552);
-localStorage.setItem("defaultLongitude", 114.15769);
+var defaultLocation;
 var userLocation = { 
-	lat: parseFloat(localStorage.getItem("defaultLatitude")), 
-	lng: parseFloat(localStorage.getItem("defaultLongitude")) 
-};
-
+        lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+        lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+    };
 function initPage(){
-	var userLocation = { 
-		lat: parseFloat(localStorage.getItem("defaultLatitude")), 
-		lng: parseFloat(localStorage.getItem("defaultLongitude")) 
-	};
-	TestGeo();
-	console.log(userLocation);
 	initMap();
+	if(gpsPermission == 'true'){
+		console.log('true');
+		userLocation = { 
+            lat: parseFloat(sessionStorage.getItem("latitude")), 
+            lng: parseFloat(sessionStorage.getItem("longitude")) 
+        };
+        console.log(userLocation);
+		setTimeout(updateLocation,3000);
+	}else if(gpsPermission == 'false' && 
+        (sessionStorage.getItem("latitude") != null && 
+            sessionStorage.getItem("longitude") != null)){
+        console.log("Permission denied, last found location found, using last found location");
+        userLocation = { 
+            lat: parseFloat(sessionStorage.getItem("latitude")), 
+            lng: parseFloat(sessionStorage.getItem("longitude")) 
+        };
+        defaultLocation = false;
+        setTimeout(updateLocation,3000);
+    }else if(gpsPermission == 'false' && 
+        (sessionStorage.getItem("latitude") == null && 
+            sessionStorage.getItem("longitude") == null)){
+        console.log("Permission denied, last found location not found, using default location");
+        defaultLocation = true;
+        setTimeout(updateLocation,3000);
+    } 
 	
+
 }
-
-
-//function that check if the brower support geolocation
-//if yes, then call the function getLocation
-//if no, then call the function positionError
-function TestGeo(){
-    if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(getLocation, positionError, {
-        	maximumAge: 30000, 
-        	timeout: 10000, 
-        	enableHighAccuracy: true});}
-    else{
-        alert("Sorry, but it looks like your browser does not support geolocation.");
-    }
-}
-
-//function that get the current location
-function getLocation(position) {
-	//get the latitude and longitude
-	latitude = position.coords.latitude;
-	longitude = position.coords.longitude;
-
-	//save the current location for offline use
-	sessionStorage.setItem("latitude", latitude);
-	sessionStorage.setItem("longitude", longitude);
-	console.log(latitude);
-	console.log(longitude);
-	gpsPermission = true;
-
-	
-	console.log('this');
-}
-
-
-
-//function that display any error inculde permission denied error
-//then the function will initialize the map with the last known/selected location
-function positionError( error ) { 
-
-    switch ( error.code ) { 
-        case error.PERMISSION_DENIED: 	                
-            console.error( "User denied the request for Geolocation." ); 
-            break; 
-
-        case error.POSITION_UNAVAILABLE: 	    
-            console.error( "Location information is unavailable." ); 
-            break; 
-
-        case error.TIMEOUT: 	    
-            console.error( "The request to get user location timed out." ); 
-            break; 
-
-        case error.UNKNOWN_ERROR: 
-            console.error( "An unknown error occurred." ); 
-            break; 
-    }
-    gpsPermission = false;
-    initMap();
-    console.log(gpsPremission);
-}
-
-
 
 //function that initialize the google map component
 function initMap(){
-
+	console.log("initMap");
 	console.log(userLocation);
 
   	// The map, centered at latest location
@@ -181,17 +136,12 @@ function initMap(){
     	}
   	);
 
-
-
   	//create marker, marked the latest location
-  	const marker = new google.maps.Marker({
+  	marker = new google.maps.Marker({
 		position: new google.maps.LatLng(userLocation),
 		map: map,
 		icon:'',
 	});
-
-  	//Update location once
-  	initLocation();
 
   	//add the location selection feature to the google map components
   	google.maps.event.addListener(map, 'click', function(event) {
@@ -216,30 +166,28 @@ function initMap(){
 		sessionStorage.setItem("longitude", lng);
 
 		//update the address
-		geoCoding();
+		geoCoding(userLocation);
 		console.log("Address coded");
 	})
 
 	//add interaction listeners to make weather requests
 	google.maps.event.addListener(map, 'idle', checkIfDataRequested);
 	
+	console.log("Map inisalized");
+
 }
 
-
-
 //function for coding the geolocation from the marker's latitude and longitude
-function geoCoding(){
+function geoCoding(userLocation){
 	const geocoder = new google.maps.Geocoder();
 	var display = document.getElementById("address");
-	const selectedLocation = {
-		lat: parseFloat(sessionStorage.getItem("latitude")),
-		lng: parseFloat(sessionStorage.getItem("longitude")),
-	};
 
-	geocoder.geocode({ location: selectedLocation }, (results, status) => {
+	console.log(userLocation);
+	
+	geocoder.geocode({ location: userLocation }, (results, status) => {
     	if (status === "OK") {
     		if (results[0]) {
-    			display.innerHTML = results[0].formatted_address;
+    			address.innerHTML = results[0].formatted_address;
     		}else {
 		        window.alert("No results found");
 		    	}
@@ -249,53 +197,39 @@ function geoCoding(){
 	});
 }
 
-function initLocation(){
-	console.log('run');
-	if(gpsPermission == true && 
-        (sessionStorage.getItem("latitude") != null && 
-            sessionStorage.getItem("longitude") != null)){
+function updateLocation(){
+	console.log("updateLocation");
+	console.log(gpsPermission);
 
-	        const userLocation = { 
-	            lat: parseFloat(sessionStorage.getItem("latitude")), 
-	            lng: parseFloat(sessionStorage.getItem("longitude")) 
-	        };
-	        console.log("Using real time location");
-	        
-	        marker.setPosition(new google.maps.LatLng(userLocation));
-
-	    }else if(gpsPermission == false && 
-	        (sessionStorage.getItem("latitude") != null && 
-	            sessionStorage.getItem("longitude") != null)){
-
-	        const userLocation = { 
-	            lat: parseFloat(sessionStorage.getItem("latitude")), 
-	            lng: parseFloat(sessionStorage.getItem("longitude")) 
-	        };
-	        console.log("Using last known location");
-	        
-	        marker.setPosition(new google.maps.LatLng(userLocation));
-
-	    }else if(gpsPermission == false && 
-	        (sessionStorage.getItem("latitude") == null && 
-	            sessionStorage.getItem("longitude") == null)){
-
-	        const userLocation = { 
-	            lat: parseFloat(localStorage.getItem("defaultLatitude")), 
-	            lng: parseFloat(localStorage.getItem("defaultLongitude")) 
-	        };
-	        console.log("Using default location");
-	        
-	        marker.setPosition(new google.maps.LatLng(userLocation));
-	}	
+	if(gpsPermission == 'true'){
+		console.log("Using real time location");
 		
-		map.setCenter(userLocation);
+	        console.log(userLocation);
+	        marker.setPosition(new google.maps.LatLng(userLocation));
 
-		//code the latest location
-		geoCoding();
-		console.log("Address coded");
+    }else if(gpsPermission == 'false' && defaultLocation == false){
+    	console.log("Using last found location");
+    	
+    	console.log(userLocation);
+	    marker.setPosition(new google.maps.LatLng(userLocation));
+    }
+    else if(gpsPermission == 'false' && defaultLocation == true){
+        userLocation = { 
+            lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+            lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+        };
+        console.log("Using default location");
+        
+        marker.setPosition(new google.maps.LatLng(userLocation));
 
-	}
+	}	
+	console.log(userLocation);
+	map.setCenter(userLocation);
 
+	//code the latest location
+	geoCoding(userLocation);
+	console.log("Address coded");
+}
 
 
 // Add the markers to the map
@@ -326,12 +260,12 @@ var checkIfDataRequested = function(){
   };
 
 // Get the coordinates from the Map bounds
-	var getCoords = function() {
-		var bounds = map.getBounds();
-		var NE = bounds.getNorthEast();
-		var SW = bounds.getSouthWest();
-		getWeather(NE.lat(), NE.lng(), SW.lat(), SW.lng());
-	};
+var getCoords = function() {
+	var bounds = map.getBounds();
+	var NE = bounds.getNorthEast();
+	var SW = bounds.getSouthWest();
+	getWeather(NE.lat(), NE.lng(), SW.lat(), SW.lng());
+};
 
 // Make the weather request
 var getWeather = function(northLat, eastLng, southLat, westLng) {

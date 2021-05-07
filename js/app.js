@@ -1,4 +1,4 @@
-var gpsPermission = null;
+localStorage.setItem("gpsPermission", null);
 
 //set the default location
 localStorage.setItem("defaultLatitude", 22.28552);
@@ -292,32 +292,13 @@ function getLocation(position) {
     sessionStorage.setItem("longitude", longitude);
     console.log(latitude);
     console.log(longitude);
-    gpsPermission = true;
+    localStorage.setItem("gpsPermission", true);
     console.log("GPS premitted");
     
-    //Update location once
-    displayLocation();
-    
-    // Update location every 5 mins
-    setInterval(function(){
-        if(gpsPermission == true || 
-        (sessionStorage.getItem("latitude") != null && 
-            sessionStorage.getItem("longitude") != null)){
-            console.log("Permission granted, using current location");
-            const latlng = { 
-                lat: parseFloat(sessionStorage.getItem("latitude")), 
-                lng: parseFloat(sessionStorage.getItem("longitude")) 
-            };
-            geoCoding(latlng);
-        }else if(gpsPermission == false){
-            console.log("No permission, using default location");
-            const latlng = { 
-                lat: parseFloat(localStorage.getItem("defaultLatitude")), 
-                lng: parseFloat(localStorage.getItem("defaultLongitude")) 
-            };
-            geoCoding(latlng);
-        }
-    }, 5000);
+    //Update once
+    updateLocation();
+    // Update location periodly
+    setInterval(updateLocation, 50000);
     
 }
 
@@ -342,23 +323,11 @@ function positionError( error ) {
             console.error( "An unknown error occurred." ); 
             break; 
     }
-    gpsPermission = false;
+    localStorage.setItem("gpsPermission", false);
     console.log("GPS permission denied");
-    displayLocation();  
-}
-
-//function for coding the geolocation from the marker's latitude and longitude
-function displayLocation(){
-    if(gpsPermission == true && 
-        (sessionStorage.getItem("latitude") != null && 
-            sessionStorage.getItem("longitude") != null)){
-        console.log("Permission granted, using current location");
-        const latlng = { 
-            lat: parseFloat(sessionStorage.getItem("latitude")), 
-            lng: parseFloat(sessionStorage.getItem("longitude")) 
-        };
-        geoCoding(latlng);
-    }else if(gpsPermission == false && 
+    var permission = localStorage.getItem("gpsPermission");
+    console.log(permission);
+    if(permission == 'false' && 
         (sessionStorage.getItem("latitude") != null && 
             sessionStorage.getItem("longitude") != null)){
         console.log("Permission denied, last found location found, using last found location");
@@ -367,7 +336,7 @@ function displayLocation(){
             lng: parseFloat(sessionStorage.getItem("longitude")) 
         };
         geoCoding(latlng);
-    }else if(gpsPermission == false && 
+    }else if(permission == 'false' && 
         (sessionStorage.getItem("latitude") == null && 
             sessionStorage.getItem("longitude") == null)){
         console.log("Permission denied, last found location not found, using default location");
@@ -376,8 +345,7 @@ function displayLocation(){
             lng: parseFloat(localStorage.getItem("defaultLongitude")) 
         };
         geoCoding(latlng);
-    }
-    
+    } 
 }
 
 function geoCoding(latlng){
@@ -402,3 +370,16 @@ function geoCoding(latlng){
     });
 }
 
+function updateLocation(){
+    var permission = localStorage.getItem("gpsPermission");
+        if(permission == true || 
+        (sessionStorage.getItem("latitude") != null && 
+            sessionStorage.getItem("longitude") != null)){
+            console.log("Permission granted, using current location");
+            const latlng = { 
+                lat: parseFloat(sessionStorage.getItem("latitude")), 
+                lng: parseFloat(sessionStorage.getItem("longitude")) 
+            };
+            geoCoding(latlng);
+        }
+}
