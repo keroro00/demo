@@ -218,7 +218,8 @@ function displayForecast(forecast) {
     document.getElementById("forecastIcon").innerHTML="";
     document.getElementById("forecastDate").innerHTML="";
     document.getElementById("forecastWeek").innerHTML="";
-    document.getElementById("forecastTemp").innerHTML="";
+    document.getElementById("forecastMaxTemp").innerHTML="";
+    document.getElementById("forecastMinTemp").innerHTML="";
     forecast.forEach(addRowForecast);
 }
 
