@@ -8,6 +8,8 @@ const userLocation = {
     lng: parseFloat(localStorage.getItem("defaultLongitude")) 
 };
 
+var Maxarray =[];
+var Minarray =[];
 
 var latitudeOfStation = [];
 latitudeOfStation[0]= 22.31194; //King's Park
@@ -244,12 +246,23 @@ function addRowForecast(forecast) {
     Weekrow.setAttribute('data-label', "week");
     Weekrow.innerHTML = forecast.week;
 
-    var forecastTemp = document.getElementById("forecastTemp");
-    var Temprow = forecastTemp.insertCell();
-    Temprow.setAttribute('data-label', "temp");
-    Temprow.innerHTML = forecast.forecastMaxtemp.value+"°C";
+    var forecastMaxTemp = document.getElementById("forecastMaxTemp"); //highest temp
+    var MaxTemprow = forecastMaxTemp.insertCell();
+    MaxTemprow.setAttribute('data-label', "maxtemp");
+    MaxTemprow.innerHTML = forecast.forecastMaxtemp.value+"°C";
 
+    var forecastMinTemp = document.getElementById("forecastMinTemp"); //lowest temp
+    var MinTemprow = forecastMinTemp.insertCell();
+    MinTemprow.setAttribute('data-label', "mintemp");
+    MinTemprow.innerHTML = forecast.forecastMintemp.value+"°C";
+    GetMaxAndMin(forecast.forecastMaxtemp.value,forecast.forecastMintemp.value);
+    
 }
+
+    function GetMaxAndMin(Max,Min){   //the highest and lowest temperature for each day
+        Maxarray.push(Max);
+        Minarray.push(Min);
+    }
 
 
 //function that check if the brower support geolocation
