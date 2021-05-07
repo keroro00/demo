@@ -373,7 +373,11 @@ function geoCoding(latlng){
     if (status === "OK") {
         if (results[0]) {
             console.log("Displaying location");
-            display.innerHTML = results[0].formatted_address;
+
+            console.log(area);
+            var address = results[0].formatted_address.split(",");
+            var area = address[1];
+            display.innerHTML = area;
         }else {
             window.alert("No results found");
             }
