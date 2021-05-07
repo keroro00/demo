@@ -1,5 +1,5 @@
 
-var gpsPremission = null;
+var gpsPermission = null;
 var gettingData = false;
 var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
 var geoJSON;
@@ -13,6 +13,18 @@ var userLocation = {
 	lat: parseFloat(localStorage.getItem("defaultLatitude")), 
 	lng: parseFloat(localStorage.getItem("defaultLongitude")) 
 };
+
+function initPage(){
+	var userLocation = { 
+		lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+		lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+	};
+	TestGeo();
+	console.log(userLocation);
+	initMap();
+	
+}
+
 
 //function that check if the brower support geolocation
 //if yes, then call the function getLocation
@@ -39,7 +51,10 @@ function getLocation(position) {
 	sessionStorage.setItem("longitude", longitude);
 	console.log(latitude);
 	console.log(longitude);
-	gpsPremission = true;
+	gpsPermission = true;
+
+	
+	console.log('this');
 }
 
 
@@ -65,7 +80,7 @@ function positionError( error ) {
             console.error( "An unknown error occurred." ); 
             break; 
     }
-    gpsPremission = false;
+    gpsPermission = false;
     initMap();
     console.log(gpsPremission);
 }
@@ -173,34 +188,10 @@ function initMap(){
 		position: new google.maps.LatLng(userLocation),
 		map: map,
 		icon:'',
-		});
+	});
 
-  	// Update location every 5 seconds
-  	setInterval(function() {
-
-  		if(gpsPremission == null){
-    		marker.setMap(null);
-    	}else
-  		if(gpsPremission == true || (sessionStorage.getItem("latitude") != null && sessionStorage.getItem("longitude") != null)){
-    		userLocation = { 
-    			lat: parseFloat(sessionStorage.getItem("latitude")), 
-    			lng: parseFloat(sessionStorage.getItem("longitude")) 
-    		};
-    		console.log("location found");
-    		
-    		marker.setPosition(new google.maps.LatLng(userLocation));
-    		
-    	}else{
-    		marker.setPosition(new google.maps.LatLng(userLocation));
-    		
-    	}
-		
-    	map.setCenter(marker.getPosition());
-    	
-		//code the latest location
-		codeAddress();
-		console.log("Address coded");
-	}, 5000);
+  	//Update location once
+  	initLocation();
 
   	//add the location selection feature to the google map components
   	google.maps.event.addListener(map, 'click', function(event) {
@@ -219,19 +210,94 @@ function initMap(){
 		//update components
 		marker.setPosition(new google.maps.LatLng(userLocation));
 		map.setCenter(new google.maps.LatLng(userLocation));
-		codeAddress();
-		console.log("Address coded");
-
-		//update the latitude and longitude for offline use
+		
+		//update the latitude and longitude
 	    sessionStorage.setItem("latitude", lat);
 		sessionStorage.setItem("longitude", lng);
+
+		//update the address
+		geoCoding();
+		console.log("Address coded");
 	})
 
 	//add interaction listeners to make weather requests
 	google.maps.event.addListener(map, 'idle', checkIfDataRequested);
-
-
+	
 }
+
+
+
+//function for coding the geolocation from the marker's latitude and longitude
+function geoCoding(){
+	const geocoder = new google.maps.Geocoder();
+	var display = document.getElementById("address");
+	const selectedLocation = {
+		lat: parseFloat(sessionStorage.getItem("latitude")),
+		lng: parseFloat(sessionStorage.getItem("longitude")),
+	};
+
+	geocoder.geocode({ location: selectedLocation }, (results, status) => {
+    	if (status === "OK") {
+    		if (results[0]) {
+    			display.innerHTML = results[0].formatted_address;
+    		}else {
+		        window.alert("No results found");
+		    	}
+		 }else {
+		      window.alert("Geocoder failed due to: " + status);
+			}
+	});
+}
+
+function initLocation(){
+	console.log('run');
+	if(gpsPermission == true && 
+        (sessionStorage.getItem("latitude") != null && 
+            sessionStorage.getItem("longitude") != null)){
+
+	        const userLocation = { 
+	            lat: parseFloat(sessionStorage.getItem("latitude")), 
+	            lng: parseFloat(sessionStorage.getItem("longitude")) 
+	        };
+	        console.log("Using real time location");
+	        
+	        marker.setPosition(new google.maps.LatLng(userLocation));
+
+	    }else if(gpsPermission == false && 
+	        (sessionStorage.getItem("latitude") != null && 
+	            sessionStorage.getItem("longitude") != null)){
+
+	        const userLocation = { 
+	            lat: parseFloat(sessionStorage.getItem("latitude")), 
+	            lng: parseFloat(sessionStorage.getItem("longitude")) 
+	        };
+	        console.log("Using last known location");
+	        
+	        marker.setPosition(new google.maps.LatLng(userLocation));
+
+	    }else if(gpsPermission == false && 
+	        (sessionStorage.getItem("latitude") == null && 
+	            sessionStorage.getItem("longitude") == null)){
+
+	        const userLocation = { 
+	            lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+	            lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+	        };
+	        console.log("Using default location");
+	        
+	        marker.setPosition(new google.maps.LatLng(userLocation));
+	}	
+		
+		map.setCenter(userLocation);
+
+		//code the latest location
+		geoCoding();
+		console.log("Address coded");
+
+	}
+
+
+
 // Add the markers to the map
   var drawIcons = function (weather) {
      map.data.addGeoJson(geoJSON);
@@ -241,13 +307,13 @@ function initMap(){
 
   // Clear data layer and geoJSON
   var resetData = function () {
-    geoJSON = {
-      type: "FeatureCollection",
-      features: []
-    };
-    map.data.forEach(function(feature) {
-      map.data.remove(feature);
-    });
+	    geoJSON = {
+	      type: "FeatureCollection",
+	      features: []
+	    };
+	    map.data.forEach(function(feature) {
+	      map.data.remove(feature);
+	    });
   };
 
 var checkIfDataRequested = function(){
@@ -260,12 +326,12 @@ var checkIfDataRequested = function(){
   };
 
 // Get the coordinates from the Map bounds
-  var getCoords = function() {
-    var bounds = map.getBounds();
-    var NE = bounds.getNorthEast();
-    var SW = bounds.getSouthWest();
-    getWeather(NE.lat(), NE.lng(), SW.lat(), SW.lng());
-  };
+	var getCoords = function() {
+		var bounds = map.getBounds();
+		var NE = bounds.getNorthEast();
+		var SW = bounds.getSouthWest();
+		getWeather(NE.lat(), NE.lng(), SW.lat(), SW.lng());
+	};
 
 // Make the weather request
 var getWeather = function(northLat, eastLng, southLat, westLng) {
@@ -284,15 +350,15 @@ var getWeather = function(northLat, eastLng, southLat, westLng) {
 
 // Take the JSON results and proccess them
   var proccessResults = function() {
-    console.log(this);
-    var results = JSON.parse(this.responseText);
-    if (results.list.length > 0) {
-        resetData();
-        for (var i = 0; i < results.list.length; i++) {
-          geoJSON.features.push(jsonToGeoJson(results.list[i]));
-        }
-        drawIcons(geoJSON);
-    }
+	    console.log(this);
+	    var results = JSON.parse(this.responseText);
+	    if (results.list.length > 0) {
+	        resetData();
+	        for (var i = 0; i < results.list.length; i++) {
+	          geoJSON.features.push(jsonToGeoJson(results.list[i]));
+	        }
+	        drawIcons(geoJSON);
+	    }
   };
 
 // For each result that comes back, convert the data to geoJSON
@@ -333,44 +399,5 @@ map.data.setStyle(function(feature) {
 // returns object
 return feature;
 
-
-
-  google.maps.event.addDomListener(window, 'load', initMap);
-};
-
-
-//function for handleing location selecting event 
-function markPlaces(location){
-	console.log("Map clicked");
-	
-	var clickedLocation = new google.maps.LatLng(location);
-
-	marker.setMap(null);
-	const marker = new google.maps.Marker({
-		position: new google.maps.LatLng(userLocation),
-		map: map,
-		icon:'',
-	});
-}
-
-//function for coding the geolocation from the marker's latitude and longitude
-function codeAddress(){
-	const geocoder = new google.maps.Geocoder();
-	var display = document.getElementById("address");
-	const latlng = {
-		lat: parseFloat(sessionStorage.getItem("latitude")),
-		lng: parseFloat(sessionStorage.getItem("longitude")),
-	};
-
-	geocoder.geocode({ location: latlng }, (results, status) => {
-    	if (status === "OK") {
-    		if (results[0]) {
-    			display.innerHTML = results[0].formatted_address;
-    		}else {
-		        window.alert("No results found");
-		    	}
-		 }else {
-		      window.alert("Geocoder failed due to: " + status);
-			}
-	});
-}
+  google.maps.event.addDomListener(window, 'load', initMap());
+  };
