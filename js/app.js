@@ -70,6 +70,8 @@ function initialize() {
         retrieveTemperature();
         retrieveForecast();
         retrieveSituation();
+        setInterval(function(){        
+            retrieveTemperature();    }, 5000);
       //var weatherback = getElementById("weather");  grab the background
         //getElementById("weather").style = 
         //if (weather= sunny){
@@ -211,6 +213,10 @@ function displayToday(todayIcon,temperature){
 
 //Display the future days weather forecast
 function displayForecast(forecast) {
+    document.getElementById("forecastIcon").innerHTML="";
+    document.getElementById("forecastDate").innerHTML="";
+    document.getElementById("forecastWeek").innerHTML="";
+    document.getElementById("forecastTemp").innerHTML="";
     forecast.forEach(addRowForecast);
 }
 
