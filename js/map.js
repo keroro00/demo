@@ -16,24 +16,24 @@ function initPage(){
 	if(gpsPermission == 'true'){
 		console.log('true');
 		userLocation = { 
-            lat: parseFloat(sessionStorage.getItem("latitude")), 
-            lng: parseFloat(sessionStorage.getItem("longitude")) 
+            lat: parseFloat(localStorage.getItem("latitude")), 
+            lng: parseFloat(localStorage.getItem("longitude")) 
         };
         console.log(userLocation);
 		setTimeout(updateLocation,3000);
 	}else if(gpsPermission == 'false' && 
-        (sessionStorage.getItem("latitude") != null && 
-            sessionStorage.getItem("longitude") != null)){
+        (localStorage.getItem("latitude") != null && 
+            localStorage.getItem("longitude") != null)){
         console.log("Permission denied, last found location found, using last found location");
         userLocation = { 
-            lat: parseFloat(sessionStorage.getItem("latitude")), 
-            lng: parseFloat(sessionStorage.getItem("longitude")) 
+            lat: parseFloat(localStorage.getItem("latitude")), 
+            lng: parseFloat(localStorage.getItem("longitude")) 
         };
         defaultLocation = false;
         setTimeout(updateLocation,3000);
     }else if(gpsPermission == 'false' && 
-        (sessionStorage.getItem("latitude") == null && 
-            sessionStorage.getItem("longitude") == null)){
+        (localStorage.getItem("latitude") == null && 
+            localStorage.getItem("longitude") == null)){
         console.log("Permission denied, last found location not found, using default location");
         defaultLocation = true;
         setTimeout(updateLocation,3000);
@@ -162,8 +162,8 @@ function initMap(){
 		map.setCenter(new google.maps.LatLng(userLocation));
 		
 		//update the latitude and longitude
-	    sessionStorage.setItem("latitude", lat);
-		sessionStorage.setItem("longitude", lng);
+	    localStorage.setItem("latitude", lat);
+		localStorage.setItem("longitude", lng);
 
 		//update the address
 		geoCoding(userLocation);
@@ -188,12 +188,14 @@ function geoCoding(userLocation){
     	if (status === "OK") {
     		if (results[0]) {
     			address.innerHTML = results[0].formatted_address;
-    		}else {
-		        window.alert("No results found");
-		    	}
-		 }else {
-		      window.alert("Geocoder failed due to: " + status);
-			}
+    			
+        }else {
+        window.alert("No results found");
+    	}
+    }
+    else {
+      window.alert("Geocoder failed due to: " + status);
+	}
 	});
 }
 
@@ -335,3 +337,41 @@ return feature;
 
   google.maps.event.addDomListener(window, 'load', initMap());
   };
+
+
+function getCity(){
+	var country = null, countryCode = null, city = null, cityAlt = null;
+    var c, lc, component;
+    for (var r = 0, rl = results.length; r < rl; r += 1) {
+        var result = results[r];
+
+        if (!city && result.types[0] === 'locality') {
+            for (c = 0, lc = result.address_components.length; c < lc; c += 1) {
+                component = result.address_components[c];
+
+                if (component.types[0] === 'locality') {
+                    city = component.long_name;
+                    break;
+                }
+            }
+        }
+        else if (!city && !cityAlt && result.types[0] === 'administrative_area_level_1') {
+            for (c = 0, lc = result.address_components.length; c < lc; c += 1) {
+                component = result.address_components[c];
+
+                if (component.types[0] === 'administrative_area_level_1') {
+                    cityAlt = component.long_name;
+                    break;
+                }
+            }
+        } else if (!country && result.types[0] === 'country') {
+            country = result.address_components[0].long_name;
+            countryCode = result.address_components[0].short_name;
+        }
+
+        if (city && country) {
+            break;
+        }
+    }
+    console.log("City: " + city + ", City2: " + cityAlt + ", Country: " + country + ", Country Code: " + countryCode);
+}

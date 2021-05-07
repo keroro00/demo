@@ -92,7 +92,7 @@ function initialize() {
         //
 
         TestGeo();
-        getSRS();
+        
 }
 // Get the video
 var video = document.getElementById("myVideo");
@@ -167,7 +167,7 @@ function retrieveSituation() {
             var forecastPeriod= JSON.parse(xhr.response).forecastPeriod;
             var forecastDesc= JSON.parse(xhr.response).forecastDesc;
             var outlook= JSON.parse(xhr.response).outlook;
-            displayText(situation,forecastPeriod,forecastDesc,outlook);
+            
 
   
             const localStorage = window.localStorage;
@@ -188,9 +188,9 @@ function retrieveSituation() {
 function whereNear(temperature){
     var minimum = 1;
     var stationId;
-   if (sessionStorage.getItem("latitude")!= null & sessionStorage.getItem("longitude")!= null){
-        latitudeOfUser = sessionStorage.getItem("latitude")
-        longitudeOfUser = sessionStorage.getItem("longitude")
+   if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
+        latitudeOfUser = localStorage.getItem("latitude")
+        longitudeOfUser = localStorage.getItem("longitude")
     }
     else{
         latitudeOfUser = localStorage.getItem("defaultLatitude");
@@ -223,12 +223,6 @@ function displayForecast(forecast) {
     document.getElementById("forecastMinTemp").innerHTML="";
     forecast.forEach(addRowForecast);
 }
-
-//useless now , can del it later
-function displayText(situation,forecastPeriod,forecastDesc,outlook) {
-    document.getElementById("WeatherSituation").innerHTML=situation+"</br>"+forecastPeriod+"</br>"+forecastDesc+"</br>"+outlook;
-}
-
 
 //Add the forecast in a row
 function addRowForecast(forecast) {
@@ -288,8 +282,8 @@ function getLocation(position) {
     longitude = position.coords.longitude;
 
     //save the current location for offline use
-    sessionStorage.setItem("latitude", latitude);
-    sessionStorage.setItem("longitude", longitude);
+    localStorage.setItem("latitude", latitude);
+    localStorage.setItem("longitude", longitude);
     console.log(latitude);
     console.log(longitude);
     localStorage.setItem("gpsPermission", true);
@@ -328,17 +322,17 @@ function positionError( error ) {
     var permission = localStorage.getItem("gpsPermission");
     console.log(permission);
     if(permission == 'false' && 
-        (sessionStorage.getItem("latitude") != null && 
-            sessionStorage.getItem("longitude") != null)){
+        (localStorage.getItem("latitude") != null && 
+            localStorage.getItem("longitude") != null)){
         console.log("Permission denied, last found location found, using last found location");
         const latlng = { 
-            lat: parseFloat(sessionStorage.getItem("latitude")), 
-            lng: parseFloat(sessionStorage.getItem("longitude")) 
+            lat: parseFloat(localStorage.getItem("latitude")), 
+            lng: parseFloat(localStorage.getItem("longitude")) 
         };
         geoCoding(latlng);
     }else if(permission == 'false' && 
-        (sessionStorage.getItem("latitude") == null && 
-            sessionStorage.getItem("longitude") == null)){
+        (localStorage.getItem("latitude") == null && 
+            localStorage.getItem("longitude") == null)){
         console.log("Permission denied, last found location not found, using default location");
         const latlng = { 
             lat: parseFloat(localStorage.getItem("defaultLatitude")), 
@@ -373,12 +367,12 @@ function geoCoding(latlng){
 function updateLocation(){
     var permission = localStorage.getItem("gpsPermission");
         if(permission == true || 
-        (sessionStorage.getItem("latitude") != null && 
-            sessionStorage.getItem("longitude") != null)){
+        (localStorage.getItem("latitude") != null && 
+            localStorage.getItem("longitude") != null)){
             console.log("Permission granted, using current location");
             const latlng = { 
-                lat: parseFloat(sessionStorage.getItem("latitude")), 
-                lng: parseFloat(sessionStorage.getItem("longitude")) 
+                lat: parseFloat(localStorage.getItem("latitude")), 
+                lng: parseFloat(localStorage.getItem("longitude")) 
             };
             geoCoding(latlng);
         }
