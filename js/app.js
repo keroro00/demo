@@ -381,17 +381,17 @@ function displayLocation(){
 }
 
 function geoCoding(latlng){
+    console.log(latlng);
     const geocoder = new google.maps.Geocoder();
-   // var display = document.getElementById("address");
-    var display = document.getElementById("location"); //The position below icon By Tony
+    var display = document.getElementById("location");
     geocoder.geocode({ location: latlng }, (results, status) => {
     if (status === "OK") {
         if (results[0]) {
             console.log("Displaying location");
-
-            console.log(area);
             var address = results[0].formatted_address.split(",");
-            var area = address[1];
+            console.log(address);
+            var area = address[2];
+            console.log(area);
             display.innerHTML = area;
         }else {
             window.alert("No results found");
