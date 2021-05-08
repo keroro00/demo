@@ -10,7 +10,6 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		
 
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -34,7 +33,10 @@
 		</script>
 		<!--chart js-->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-		
+
+		<!--Sunrise js-->
+		<script src="js/jquery.min.js"></script>
+		<script src="js/moment.js"></script>
 
 	</head>
 
@@ -52,17 +54,13 @@
 			<ul class="navbar-nav mr-auto">
 
 			<li class="nav-item">
-		      <a class="nav-link text-white" href="">Main Page</a>
-		    </li>
-
-			<li class="nav-item">
-		      <a class="nav-link text-white" href="">Sunset</a>
+		      <a class="nav-link text-white" href="index.html">Main Page</a>
 		    </li>
 
 			<li class="nav-item">
 		      <a class="nav-link text-white" href="map.html" onclick="document.getElementById('main').innerHTML=window.open('map.html',_parent);">Map</a>
 		    </li>
-
+				<!-- -->
 			</ul>
 
 		</nav>
@@ -79,29 +77,25 @@
 <div class="container-fluid maincontent" id="main">
 
 
-	<div class = "row justify-content-center">
-
-		<div class = "col">
-			<div class="text-center" id="address"></div>
-		</div>
-
-	</div>
-
 	<!--Today Weather-->
 	<div class = "row justify-content-center">
 
-		<div class = "col" style="margin-bottom: 5%">
-			<div class="text-center TodayDetail"><img src="" alt="Today weather" id="TodayIcon" width="150" height="150"><div id="location"></div><div id="TodayTemp"></div></div>
+		<div class = "col">
+			<div class="text-center TodayDetail">
+				<img src="" alt="Today weather" id="TodayIcon" width="150" height="150">
+				<h2 class ="topicFont" id="location"></h2>
+				<h2 class ="topicFont" id="TodayTemp"></h2></div>
 		</div>
+
 	</div>
 
+	<hr>
 	<!--Weekly Weather-->
-	<div class = "row justify-content-center">
+	<div class = "row justify-content-center mt-3">
 
-				<div class="col forecast" >
-					<p class = "text-center">Weekly</p>
-					
-						<table class="center">
+				<div class="col forecast">
+					<h3 class = "topicFont text-center">Weekly</h3>
+					<table class="center">
 						<thead>
 						<tr id="forecastIcon"></tr>
 						<tr id="forecastDate"></tr>
@@ -109,23 +103,36 @@
 						<tr id="forecastMaxTemp"></tr>
 						<tr id="forecastMinTemp"></tr>
 						</thead>
-						</table>
-					
-					
+					</table>
 				</div>
 
 		</div>
+
 		<!--Line Chart-->
-	<div class = "row justify-content-center">
+	<div class = "row justify-content-center mt-3">
 				<div style = "text-align:center;">
 					<canvas id="myChart"></canvas>
 				</div>
 	</div>
 
+	<hr>
+	<div class = "row justify-content-center">
+				<div class ="col-4">
+					<p class="text-center">Today suneise:</p>
+					<p class="text-center" id="todaySunriseTime"></p>
+				</div>
+
+				<div class ="col-4">
+					<p class="text-center">Today sunset:</p>
+					<p class="text-center" id="todaySunsetTime"></p>
+				</div>
+	</div>
+
+
+
 </div>
 
-
-	
+	<!--graph js-->
 	<script>
 		var xValues = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 	  var yValues = [26,29,32,28,28,29,30];
@@ -164,6 +171,26 @@
 	    }
 	  }
 	});  </script>
+
+	<!--Sunrise js-->
+	<script>
+			var today = new moment();
+			// console.log(today);
+			console.log(today.format());
+			var todayYear = today.format("YYYY");
+			var todayMonth = today.format("MM");
+			var todayDay = today.format("DD");
+			$.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${todayYear}&month=${todayMonth}&day=${todayDay}`,function(srsdata){
+			console.log(srsdata);
+			// console.log(srsdata.data[0][1])
+			document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+			document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
+	},'json');
+
+		// function displaySRS(srsdata){
+		//    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+		// }
+		</script>
 
 </body>
 </html>
