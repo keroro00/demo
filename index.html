@@ -98,9 +98,10 @@
 	<!--Weekly Weather-->
 	<div class = "row justify-content-center">
 
-				<div class="col forecast">
-					<p class = "text-center">Weekly</p>
-					<table class="center">
+				<div class="col forecast" class="list-group">
+					<a href="javascript:" onclick="hide.style.display=hide.style.display=='none'?'':'none'" class="list-group-item list-group-item-action" >Weekly
+					<span id="hide" style="display:none">
+						<table class="center">
 						<thead>
 						<tr id="forecastIcon"></tr>
 						<tr id="forecastDate"></tr>
@@ -108,10 +109,10 @@
 						<tr id="forecastMaxTemp"></tr>
 						<tr id="forecastMinTemp"></tr>
 						</thead>
-					</table>
+						</table>
+					</span>
+					</a>
 				</div>
-
-		</div>
 
 		<!--Line Chart-->
 	<div class = "row justify-content-center">
