@@ -9,7 +9,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	
+
 
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -29,40 +29,42 @@
 
 	<!-- Title Navbar -->
 	<header class="navbar navbar-default navbar-inverse sticky-top">
-		<!--When collapse become a menu-->
-		<button class="navbar-toggler custom-toggler" data-toggle="collapse" type="button" data-target="#mainNav">
-			<span class="navbar-toggler-icon"></span>
-		</button>
+			<!--When collapse become a menu-->
+			<button class="navbar-toggler custom-toggler" data-toggle="collapse" type="button" data-target="#mainNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-		<nav class="collapse navbar-collapse" id="mainNav">
-			<ul class="navbar-nav mr-auto">
+			<nav class="collapse navbar-collapse" id="mainNav">
+				<ul class="navbar-nav mr-auto">
 
-			<li class="nav-item">
-		      <a class="nav-link text-white" href="">Main Page</a>
-		    </li>
+				<li class="nav-item">
+			      <a class="nav-link text-white" href="index.html">Main Page</a>
+			    </li>
 
-			<li class="nav-item">
-		      <a class="nav-link text-white" href="">Sunset</a>
-		    </li>
+				<li class="nav-item">
+			      <a class="nav-link text-white" href="map.html" onclick="document.getElementById('main').innerHTML=window.open('map.html',_parent);">Map</a>
+			    </li>
+					<!-- -->
+				</ul>
 
-			<li class="nav-item">
-		      <a class="nav-link text-white" href="map.html" onclick="document.getElementById('main').innerHTML=window.open('map.html',_parent);">Map</a>
-		    </li>
-
-			</ul>
-
-		</nav>
+			</nav>
 	</header>
 
 </head>
 
-<body onload="initPage()" style="background-color: grey">
-	<script 
+<body onload="initPage(), initialize()">
+
+	<!--background-->
+	<video autoplay muted loop id="myVideo">
+		<source src="source/Good.mp4" type="video/mp4">
+	 </video>
+
+	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtlaCz15ImfzCJnn5uPyQzPe3CgyBo2Co&map_ids=69f157b099d4f8cd&language=en"
 		async>
 	</script>
 
-	<div class="container">
+	<div class="container maincontent">
 		<div class="row">
 			<div class="" id="map"></div>
 		</div>
@@ -81,10 +83,10 @@
 			</div>
 		</div>
 
-			
+
 	</div>
 
-	
+
 
 </body>
 </html>
