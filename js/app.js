@@ -378,3 +378,51 @@ function updateLocation(){
             geoCoding(latlng);
         }
 }
+function showChart(){
+  var xValues = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  var yValues = [26,29,32,28,28,29,30];
+  var yValues2 = [19,21,22,24,20,18,19];
+
+  alert(Maxarray);
+
+  new Chart(document.getElementById("line-chart"), {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(255,255,255,1.0)",
+      borderColor: "rgba(255,255,255,0.8)",
+      borderWidth: 1,
+      data: yValues
+    },{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(255,255,255,1.0)",
+      borderColor: "rgba(255,255,255,0.8)",
+      borderWidth: 1,
+      data: yValues2
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{
+        ticks: {
+          min: 10, max:36,
+             stepSize: 2,
+    fontColor: 'white'
+        }
+      }],
+
+      xAxes: [{
+          ticks: {
+              fontColor: 'white'
+          },
+      }]
+
+    }
+  }
+});
+}
