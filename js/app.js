@@ -426,3 +426,24 @@ function showChart(){
   }
 });
 }
+function sunTime(){
+
+  var today = new moment();
+  // console.log(today);
+  console.log(today.format());
+  var todayYear = today.format("YYYY");
+  var todayMonth = today.format("MM");
+  var todayDay = today.format("DD");
+  $.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${todayYear}&month=${todayMonth}&day=${todayDay}`,function(srsdata){
+  console.log(srsdata);
+  // console.log(srsdata.data[0][1])
+  document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+  document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
+},'json');
+
+// function displaySRS(srsdata){
+//    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+// }
+
+
+}
