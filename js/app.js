@@ -1,9 +1,10 @@
-localStorage.setItem("gpsPermission", null);
+
+
 
 //set the default location
 localStorage.setItem("defaultLatitude", 22.28552);
 localStorage.setItem("defaultLongitude", 114.15769);
-const userLocation = { 
+var userLocation = { 
     lat: parseFloat(localStorage.getItem("defaultLatitude")), 
     lng: parseFloat(localStorage.getItem("defaultLongitude")) 
 };
@@ -90,8 +91,26 @@ function initialize() {
         else if (weathericon = 63){weatherback.style = "Rain - 28236.mp4"}*/
         //else if (weathericon = 50){weatherback.style =}
         //
-
-        TestGeo();
+       
+        var gpsPermission = sessionStorage.getItem("gpsPermission");
+        if(gpsPermission == 'NaN'){
+            sessionStorage.setItem('gpsPermission', null);
+        }
+        if(gpsPermission == 'true'){
+            console.log("GPS granted, no need to ask permission");
+            userLocation = { 
+                lat: parseFloat(localStorage.getItem("latitude")), 
+                lng: parseFloat(localStorage.getItem("longitude")) 
+            };
+            //Update once
+            updateLocation();
+            // Update location periodly
+            setInterval(updateLocation, 50000);
+        }else{
+            TestGeo(); 
+        }
+  
+        
         
 }
 // Get the video
@@ -278,6 +297,7 @@ function TestGeo(){
 
 //function that get the current location
 function getLocation(position) {
+    console.log(position);
     //get the latitude and longitude
     latitude = position.coords.latitude;
     longitude = position.coords.longitude;
@@ -287,7 +307,7 @@ function getLocation(position) {
     localStorage.setItem("longitude", longitude);
     console.log(latitude);
     console.log(longitude);
-    localStorage.setItem("gpsPermission", true);
+    sessionStorage.setItem("gpsPermission", true);
     console.log("GPS premitted");
     
     //Update once
@@ -318,9 +338,9 @@ function positionError( error ) {
             console.error( "An unknown error occurred." ); 
             break; 
     }
-    localStorage.setItem("gpsPermission", false);
+    sessionStorage.setItem("gpsPermission", false);
     console.log("GPS permission denied");
-    var permission = localStorage.getItem("gpsPermission");
+    var permission = sessionStorage.getItem("gpsPermission");
     console.log(permission);
     if(permission == 'false' && 
         (localStorage.getItem("latitude") != null && 
@@ -353,7 +373,7 @@ function geoCoding(latlng){
             console.log("Displaying location");
             var address = results[0].formatted_address.split(",");
             console.log(address);
-            var area = address[2];
+            var area = address[address.length-2];
             console.log(area);
             display.innerHTML = area;
         }else {
@@ -366,7 +386,7 @@ function geoCoding(latlng){
 }
 
 function updateLocation(){
-    var permission = localStorage.getItem("gpsPermission");
+    var permission = sessionStorage.getItem("gpsPermission");
         if(permission == true || 
         (localStorage.getItem("latitude") != null && 
             localStorage.getItem("longitude") != null)){

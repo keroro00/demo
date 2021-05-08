@@ -1,5 +1,5 @@
 
-var gpsPermission =  localStorage.getItem("gpsPermission");
+var gpsPermission =  sessionStorage.getItem("gpsPermission");
 var gettingData = false;
 var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
 var geoJSON;
@@ -226,6 +226,7 @@ function initMap(){
 		//update the address
 		geoCoding(userLocation);
 		console.log("Address coded");
+
 	})
 
 	//add interaction listeners to make weather requests
@@ -245,19 +246,27 @@ function geoCoding(userLocation){
 	geocoder.geocode({ location: userLocation }, (results, status) => {
     	if (status === "OK") {
     		if (results[0]) {
-    			address.innerHTML = 
+    			var address = results[0].formatted_address.split(",");
+	            console.log(address);
+	            for (var i = address.length - 1; i >= 0; i--) {
+	            	if(address[i] == " Hong Kong" || address[i] == "Hong Kong"){
+	            		address.splice(i,1);
+	            	}
+	            	
+	            }
+    			display.innerHTML = 
     				"Selected location:" +
     				"<br>" + 
-    				results[0].formatted_address;
+    				address;
     			
         }else {
         console.log("No results found");
-        address.innerHTML ="Not a valid location";
+        display.innerHTML ="Not a valid location";
     	}
     }
     else {
       console.log("Geocoder failed due to: " + status);
-      address.innerHTML ="Not a valid location";
+      display.innerHTML ="Not a valid location";
 	}
 	});
 }
