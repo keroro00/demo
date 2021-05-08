@@ -75,6 +75,7 @@ function initialize() {
         retrieveSituation();
         setInterval(function(){        
             retrieveTemperature();    }, 5000);
+        setTimeout(function(){showChart();},1000);
       //var weatherback = getElementById("weather");  grab the background
         //getElementById("weather").style = 
         //if (weather= sunny){
@@ -231,7 +232,8 @@ function whereNear(temperature){
 function displayToday(todayIcon,temperature){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature);
-    NowWeatherIcon= todayIcon;
+    localStorage.setItem("nowIcon", todayIcon);
+    console.log(localStorage.getItem("nowIcon"));
 }
 
 //Display the future days weather forecast
