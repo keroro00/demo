@@ -10,7 +10,7 @@ const userLocation = {
 
 var Maxarray =[];
 var Minarray =[];
-
+var NowWeatherIcon=0;
 var latitudeOfStation = [];
     latitudeOfStation[0]= 22.31194; //King's Park
     latitudeOfStation[1]= 22.30194; //Hong Kong Observatory
@@ -212,6 +212,7 @@ function whereNear(temperature){
 function displayToday(todayIcon,temperature){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature);
+    NowWeatherIcon= todayIcon;
 }
 
 //Display the future days weather forecast
