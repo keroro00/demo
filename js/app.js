@@ -70,11 +70,11 @@ var longitudeOfStation = [];
 
 function initialize() {
 
-        retrieveTemperature();
+        retrieveWeather();
         retrieveForecast();
         retrieveSituation();
         setInterval(function(){        
-            retrieveTemperature();    }, 5000);
+            retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
       //var weatherback = getElementById("weather");  grab the background
         //getElementById("weather").style = 
@@ -139,22 +139,27 @@ function myFunction() {
   }
 }
 
-function retrieveTemperature() {
+function retrieveWeather() {
+    console.log("Retrieving temperature ");
     const xhr = new XMLHttpRequest();
     const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread";
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             var temperature = JSON.parse(xhr.response).temperature;
- 
+            var rainfall = JSON.parse(xhr.response).rainfall;
             var todayIcon= JSON.parse(xhr.response).icon;
-            displayToday(todayIcon,temperature);
+
+            console.log(rainfall);
+
+            displayToday(todayIcon,temperature,rainfall);
 
 
             const localStorage = window.localStorage;
             if (localStorage) {
                 localStorage.setItem("temperature", JSON.stringify(temperature));
                 localStorage.setItem("icon", JSON.stringify(TodayIcon));
+                localStorage.setItem("rainfall", JSON.stringify(rainfall));
             }
         }
     };
@@ -213,7 +218,7 @@ function retrieveSituation() {
 }
 
 //Calculate Which station is near to user and show the temperature of it
-function whereNear(temperature){
+function whereNear(data){
     var minimum = 1;
     var stationId;
    if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
@@ -233,15 +238,19 @@ function whereNear(temperature){
             stationId = i;
         }
     }
-    return ( temperature.data[stationId].value + "°C");
+    return ( data.data[stationId].value );
 }
 
 //Display the weather of today
-function displayToday(todayIcon,temperature){
+function displayToday(todayIcon,temperature,rainfall){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
-    document.getElementById("TodayTemp").innerHTML=whereNear(temperature);
-    localStorage.setItem("nowIcon", todayIcon);
-    console.log(localStorage.getItem("nowIcon"));
+    document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
+    if(whereNear(rainfall) == undefined){
+        document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
+    }else{
+        document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
+    }
+    
 }
 
 //Display the future days weather forecast

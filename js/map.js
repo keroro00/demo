@@ -96,7 +96,7 @@ function initPage(){
         setTimeout(updateLocation,3000);
     } 
 	
-	retrieveTemperature();
+	retrieveWeather();
 	
 }
 
@@ -204,7 +204,7 @@ function initMap(){
             timeout: 10000, 
             enableHighAccuracy: true});
 	        updateLocation();
-	        retrieveTemperature();
+	        retrieveWeather();
 		
 
 	});
@@ -246,7 +246,7 @@ function initMap(){
 		
 		//update the temprature 
 		// e25acabc91c93589301dce74749a6ddd5da195be
-		retrieveTemperature();
+		retrieveWeather();
 	})
 
 	//add interaction listeners to make weather requests
@@ -545,8 +545,12 @@ function getCity(){
     console.log("City: " + city + ", City2: " + cityAlt + ", Country: " + country + ", Country Code: " + countryCode);
 }
 
+
+
+
+
 //Display the weather of today
-function displayToday(todayIcon,temperature,rainfall){
+function displayToday(todayIcon,temperature,rainfall,uvindex){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
     if(whereNear(rainfall) == undefined){
@@ -554,10 +558,17 @@ function displayToday(todayIcon,temperature,rainfall){
     }else{
     	document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
     }
+
+    if(whereNear(uvindex) == undefined){
+    	document.getElementById("uvindex").innerHTML="UV index: 0";
+    }else{
+    	document.getElementById("uvindex").innerHTML="UVindex: " + whereNear(uvindex);
+    }
+    
     
 }
 
-function retrieveTemperature() {
+function retrieveWeather() {
 	console.log("Retrieving temperature ");
     const xhr = new XMLHttpRequest();
     const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread";
@@ -566,11 +577,13 @@ function retrieveTemperature() {
         if (xhr.readyState === 4) {
             var temperature = JSON.parse(xhr.response).temperature;
             var rainfall = JSON.parse(xhr.response).rainfall;
+            var uvindex= JSON.parse(xhr.response).uvindex;
             var todayIcon= JSON.parse(xhr.response).icon;
 
             console.log(rainfall);
+            console.log(uvindex);
 
-            displayToday(todayIcon,temperature,rainfall);
+            displayToday(todayIcon,temperature,rainfall,uvindex);
 
 
             const localStorage = window.localStorage;
@@ -578,6 +591,7 @@ function retrieveTemperature() {
                 localStorage.setItem("temperature", JSON.stringify(temperature));
                 localStorage.setItem("icon", JSON.stringify(TodayIcon));
                 localStorage.setItem("rainfall", JSON.stringify(rainfall));
+                localStorage.setItem("uvindex", JSON.stringify(uvindex));
             }
         }
     };
