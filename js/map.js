@@ -11,6 +11,63 @@ var userLocation = {
         lat: parseFloat(localStorage.getItem("defaultLatitude")), 
         lng: parseFloat(localStorage.getItem("defaultLongitude")) 
     };
+
+var latitudeOfStation = [];
+    latitudeOfStation[0]= 22.31194; //King's Park
+    latitudeOfStation[1]= 22.30194; //Hong Kong Observatory
+    latitudeOfStation[2]= 22.24778; //Wong Chuk Hang
+    latitudeOfStation[3]= 22.52861; //Ta Kwu Ling
+    latitudeOfStation[4]= 22.46889; //Lau Fau Shan
+    latitudeOfStation[5]= 22.44611; //Tai Po
+    latitudeOfStation[6]= 22.4025; //Sha Tin
+    latitudeOfStation[7]= 22.38583; //Tuen Mun
+    latitudeOfStation[8]= 22.37556; //Sai Kung
+    latitudeOfStation[9]= 22.20111; //Cheung Chau
+    latitudeOfStation[10]= 22.31667; //CHek Lap Kok
+    latitudeOfStation[11]= 22.34417; // Tsing Yi
+    latitudeOfStation[12]= 22.43611; //Shek Kong
+    latitudeOfStation[13]= 22.38361; //Tsuen Wan Ho Koon
+    latitudeOfStation[14]= 22.37556; //Tsuen Wan Shing Mun Valley
+    latitudeOfStation[15]= 22.27833; //Hong Kong Park
+    latitudeOfStation[16]= 22.28167; //Shau Kei Wan
+    latitudeOfStation[17]= 22.33500; //Kowloon City
+    latitudeOfStation[18]= 22.27056; //Happy Valley
+    latitudeOfStation[19]= 22.33944; //Wong Tai Sin
+    latitudeOfStation[20]= 22.21417; //Stanley
+    latitudeOfStation[21]= 22.31861; //Kwun Tong
+    latitudeOfStation[22]= 22.33583; //Sham Shui Po
+    latitudeOfStation[23]= 22.30472; // Kai Tak Runway Park
+    latitudeOfStation[24]= 22.44083; //Yuen Long Park
+    latitudeOfStation[25]= 22.47528; //Tai Mei Tuk 
+
+var longitudeOfStation = [];
+    longitudeOfStation[0]= 114.17278;
+    longitudeOfStation[1]= 114.17417;
+    longitudeOfStation[2]= 114.17361;
+    longitudeOfStation[3]= 114.15667;
+    longitudeOfStation[4]= 113.98361;
+    longitudeOfStation[5]= 114.17889;
+    longitudeOfStation[6]= 114.21;
+    longitudeOfStation[7]= 113.96417;
+    longitudeOfStation[8]= 114.27444;
+    longitudeOfStation[9]= 114.02667;
+    longitudeOfStation[10]= 113.91667;
+    longitudeOfStation[11]= 114.11;
+    longitudeOfStation[12]= 114.08472;
+    longitudeOfStation[13]= 114.10778;
+    longitudeOfStation[14]= 114.12667;
+    longitudeOfStation[15]= 114.16222;
+    longitudeOfStation[16]= 114.23611;
+    longitudeOfStation[17]= 114.18472;
+    longitudeOfStation[18]= 114.18361;
+    longitudeOfStation[19]= 114.20528;
+    longitudeOfStation[20]= 114.21861;
+    longitudeOfStation[21]= 114.22472;
+    longitudeOfStation[22]= 114.13694;
+    longitudeOfStation[23]= 114.21694;
+    longitudeOfStation[24]= 114.01833;
+    longitudeOfStation[25]= 114.2375;
+
 function initPage(){
 	initMap();
 	if(gpsPermission == 'true'){
@@ -39,7 +96,8 @@ function initPage(){
         setTimeout(updateLocation,3000);
     } 
 	
-
+	retrieveTemperature();
+	
 }
 
 //function that initialize the google map component
@@ -187,14 +245,19 @@ function geoCoding(userLocation){
 	geocoder.geocode({ location: userLocation }, (results, status) => {
     	if (status === "OK") {
     		if (results[0]) {
-    			address.innerHTML = results[0].formatted_address;
+    			address.innerHTML = 
+    				"Selected location:" +
+    				"<br>" + 
+    				results[0].formatted_address;
     			
         }else {
-        window.alert("No results found");
+        console.log("No results found");
+        address.innerHTML ="Not a valid location";
     	}
     }
     else {
-      window.alert("Geocoder failed due to: " + status);
+      console.log("Geocoder failed due to: " + status);
+      address.innerHTML ="Not a valid location";
 	}
 	});
 }
@@ -375,3 +438,59 @@ function getCity(){
     }
     console.log("City: " + city + ", City2: " + cityAlt + ", Country: " + country + ", Country Code: " + countryCode);
 }
+
+//Display the weather of today
+function displayToday(todayIcon,temperature){
+    document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
+    document.getElementById("TodayTemp").innerHTML=whereNear(temperature);
+}
+
+function retrieveTemperature() {
+	console.log("Retrieving temperature ");
+    const xhr = new XMLHttpRequest();
+    const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread";
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var temperature = JSON.parse(xhr.response).temperature;
+ 
+            var todayIcon= JSON.parse(xhr.response).icon;
+            displayToday(todayIcon,temperature);
+
+
+            const localStorage = window.localStorage;
+            if (localStorage) {
+                localStorage.setItem("temperature", JSON.stringify(temperature));
+                localStorage.setItem("icon", JSON.stringify(TodayIcon));
+            }
+        }
+    };
+
+    xhr.open("get", url);
+    xhr.send();
+}
+
+//Calculate Which station is near to user and show the temperature of it
+function whereNear(temperature){
+    var minimum = 1;
+    var stationId;
+   if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
+        latitudeOfUser = localStorage.getItem("latitude")
+        longitudeOfUser = localStorage.getItem("longitude")
+    }
+    else{
+        latitudeOfUser = localStorage.getItem("defaultLatitude");
+        longitudeOfUser = localStorage.getItem("defaultLongitude");
+    }
+    for (i=0;i<9;i++){
+        x = latitudeOfStation[i]-latitudeOfUser;
+        y = longitudeOfStation[i]-longitudeOfUser;
+        var Distance = Math.sqrt((x*x)+(y*y));
+        if (Distance < minimum){
+            minimum = Distance;
+            stationId = i;
+        }
+    }
+    return ( temperature.data[stationId].value + "°C");
+}
+
