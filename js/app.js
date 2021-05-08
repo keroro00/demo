@@ -1,5 +1,5 @@
-
-
+var gpsPermission = sessionStorage.getItem("gpsPermission");
+console.log(gpsPermission);
 
 //set the default location
 localStorage.setItem("defaultLatitude", 22.28552);
@@ -92,8 +92,8 @@ function initialize() {
         //else if (weathericon = 50){weatherback.style =}
         //
        
-        var gpsPermission = sessionStorage.getItem("gpsPermission");
-        if(gpsPermission == 'NaN'){
+        
+        if(gpsPermission == 'undefined'){
             sessionStorage.setItem('gpsPermission', null);
         }
         if(gpsPermission == 'true'){
@@ -285,6 +285,7 @@ function addRowForecast(forecast) {
 //if yes, then call the function getLocation
 //if no, then call the function positionError
 function TestGeo(){
+    console.log("Test GPS service");
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(getLocation, positionError, {
             maximumAge: 30000, 

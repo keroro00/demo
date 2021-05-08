@@ -1,4 +1,4 @@
-
+window.alert = function() { };
 var gpsPermission =  sessionStorage.getItem("gpsPermission");
 var gettingData = false;
 var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
@@ -193,6 +193,25 @@ function initMap(){
 			    ],
     	}
   	);
+  	const locationButton = document.createElement("button");
+	locationButton.textContent = "Pan to Current Location";
+	locationButton.classList.add("custom-map-control-button");
+	map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+	locationButton.addEventListener("click", function (){
+		if(sessionStorage.getItem("gpsPermission") == 'true'){
+			navigator.geolocation.getCurrentPosition(resetLocation, positionError, {
+            maximumAge: 30000, 
+            timeout: 10000, 
+            enableHighAccuracy: true});
+	        updateLocation();
+	        retrieveTemperature();
+		}else{
+			defaultLocation = true;
+			updateLocation();
+			retrieveTemperature();
+		}
+
+	});
 
   	//create marker, marked the latest location
   	marker = new google.maps.Marker({
@@ -227,6 +246,7 @@ function initMap(){
 		geoCoding(userLocation);
 		console.log("Address coded");
 
+		retrieveTemperature();
 	})
 
 	//add interaction listeners to make weather requests
@@ -303,6 +323,27 @@ function updateLocation(){
 	//code the latest location
 	geoCoding(userLocation);
 	console.log("Address coded");
+}
+
+function positionError( error ) { 
+
+    switch ( error.code ) { 
+        case error.PERMISSION_DENIED:                   
+            console.error( "User denied the request for Geolocation." ); 
+            break; 
+
+        case error.POSITION_UNAVAILABLE:        
+            console.error( "Location information is unavailable." ); 
+            break; 
+
+        case error.TIMEOUT:         
+            console.error( "The request to get user location timed out." ); 
+            break; 
+
+        case error.UNKNOWN_ERROR: 
+            console.error( "An unknown error occurred." ); 
+            break; 
+    }
 }
 
 
@@ -410,6 +451,54 @@ return feature;
   google.maps.event.addDomListener(window, 'load', initMap());
   };
 
+//function that get the current location
+function getLocation(position) {
+    //get the latitude and longitude
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+
+    //save the current location for offline use
+    localStorage.setItem("latitude", latitude);
+    localStorage.setItem("longitude", longitude);
+    console.log(latitude);
+    console.log(longitude);
+    sessionStorage.setItem("gpsPermission", true);
+    console.log("GPS premitted");
+    
+    //Update once
+    updateLocation();
+    // Update location periodly
+    setInterval(updateLocation, 50000);
+    
+}
+
+function resetLocation(position){
+	//get the latitude and longitude
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+
+    //save the current location for offline use
+    localStorage.setItem("latitude", latitude);
+    localStorage.setItem("longitude", longitude);
+    console.log(latitude);
+    console.log(longitude);
+    sessionStorage.setItem("gpsPermission", true);
+    console.log("GPS premitted");
+
+    userLocation = { 
+        lat: parseFloat(localStorage.getItem("latitude")), 
+        lng: parseFloat(localStorage.getItem("longitude")) 
+    };
+
+    marker.setPosition(new google.maps.LatLng(userLocation));
+    console.log(userLocation);
+	map.setCenter(userLocation);
+
+	//code the latest location
+	geoCoding(userLocation);
+	console.log("Address coded");
+    
+}
 
 function getCity(){
 	var country = null, countryCode = null, city = null, cityAlt = null;
