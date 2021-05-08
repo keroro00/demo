@@ -198,18 +198,14 @@ function initMap(){
 	locationButton.classList.add("custom-map-control-button");
 	map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 	locationButton.addEventListener("click", function (){
-		if(sessionStorage.getItem("gpsPermission") == 'true'){
+		
 			navigator.geolocation.getCurrentPosition(resetLocation, positionError, {
             maximumAge: 30000, 
             timeout: 10000, 
             enableHighAccuracy: true});
 	        updateLocation();
 	        retrieveTemperature();
-		}else{
-			defaultLocation = true;
-			updateLocation();
-			retrieveTemperature();
-		}
+		
 
 	});
 
@@ -248,7 +244,7 @@ function initMap(){
 
 		
 		//update the temprature 
-		 e25acabc91c93589301dce74749a6ddd5da195be
+		// e25acabc91c93589301dce74749a6ddd5da195be
 		retrieveTemperature();
 	})
 
@@ -277,19 +273,27 @@ function geoCoding(userLocation){
 	            	}
 	            	
 	            }
-    			display.innerHTML = 
+	            if(address.length == 0){
+	            	display.innerHTML = 
+    				"Selected location:" +
+    				"<br>" + 
+    				"Hong Kong";
+	            }else{
+	            	display.innerHTML = 
     				"Selected location:" +
     				"<br>" + 
     				address;
+	            }
+    			
     			
         }else {
         console.log("No results found");
-        display.innerHTML ="Not a valid location";
+        display.innerHTML ="<font color='red'>Not a valid location</font>";
     	}
     }
     else {
       console.log("Geocoder failed due to: " + status);
-      display.innerHTML ="Not a valid location";
+      display.innerHTML ="<font color='red'>Not a valid location</font>";
 	}
 	});
 }

@@ -106,6 +106,14 @@ function initialize() {
             updateLocation();
             // Update location periodly
             setInterval(updateLocation, 50000);
+        }else if(gpsPermission == 'false'){
+            console.log("GPS denied");
+            userLocation = { 
+                lat: parseFloat(localStorage.getItem("latitude")), 
+                lng: parseFloat(localStorage.getItem("longitude")) 
+            };
+            //Update once
+            updateLocation();
         }else{
             TestGeo(); 
         }
