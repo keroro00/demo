@@ -226,7 +226,9 @@ function initMap(){
 		//update the address
 		geoCoding(userLocation);
 		console.log("Address coded");
-
+		
+		//update the temprature 
+		retrieveTemperature();
 	})
 
 	//add interaction listeners to make weather requests
