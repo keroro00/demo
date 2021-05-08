@@ -246,6 +246,9 @@ function initMap(){
 		geoCoding(userLocation);
 		console.log("Address coded");
 
+		
+		//update the temprature 
+		 e25acabc91c93589301dce74749a6ddd5da195be
 		retrieveTemperature();
 	})
 
