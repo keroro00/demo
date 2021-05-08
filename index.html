@@ -40,7 +40,7 @@
 
 	</head>
 
-<body class="main" onload="initialize()"><!--,TestGeo()-->
+<body class="main" onload="initialize();showChart()"><!--,TestGeo()-->
 
 
 <!-- Title Navbar -->
@@ -111,7 +111,7 @@
 		<!--Line Chart-->
 	<div class = "row justify-content-center mt-3">
 				<div style = "text-align:center;">
-					<canvas id="myChart"></canvas>
+					<canvas id="line-chart"></canvas>
 				</div>
 	</div>
 
@@ -128,49 +128,15 @@
 				</div>
 	</div>
 
+	<div class = "row justify-content-center">
+				<div class ="col-4">
+					<p class="text-center" id="test">abd</p>
+				</div>
 
+	</div>
 
 </div>
 
-	<!--graph js-->
-	<script>
-		var xValues = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-	  var yValues = [26,29,32,28,28,29,30];
-	  var weatherLineChart = document.getElementById('myChart').getContext('2d');
-
-	  var newChart = new Chart(weatherLineChart, {
-	  type: "line",
-	  data: {
-	    labels: xValues,
-	    datasets: [{
-	      fill: false,
-	      lineTension: 0,
-	      backgroundColor: "rgba(255,255,255,1.0)",
-	      borderColor: "rgba(255,255,255,0.8)",
-				borderWidth: 1,
-	      data: yValues
-	    }]
-	  },
-	  options: {
-	    legend: {display: false},
-	    scales: {
-	      yAxes: [{
-	        ticks: {
-	          min: 10, max:36,
-	             stepSize: 2,
-			fontColor: 'white'
-	        }
-	      }],
-
-        xAxes: [{
-            ticks: {
-                fontColor: 'white'
-            },
-        }]
-
-	    }
-	  }
-	});  </script>
 
 	<!--Sunrise js-->
 	<script>
