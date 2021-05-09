@@ -73,6 +73,7 @@ function initialize() {
         retrieveWeather();
         retrieveForecast();
         retrieveSituation();
+        ChangeBackground();
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
@@ -123,10 +124,8 @@ function initialize() {
         
 }
 // Get the video
-var video = document.getElementById("myVideo");
+var video = document.getElementById("weatherback");
 
-// Get the button
-var btn = document.getElementById("myBtn");
 
 // Pause and play the video, and change the button text
 function myFunction() {
@@ -137,6 +136,30 @@ function myFunction() {
     video.pause();
     btn.innerHTML = "Play";
   }
+}
+
+function ChangeBackground(){
+    var weatherback = document.getElementById("weatherback");
+    weatherback.src = "source/Rain.mp4";
+    var weathericon = parseInt(localStorage.getItem("nowIcon"));
+    var SunnyDay =[50,51,52,53,54];
+    var RainDay =[60,61,62,63,64,65];
+    var Night=[70,71,72,73,74,75,76,77];
+    for (i=0;i<SunnyDay.length;i++){
+        if (weathericon==SunnyDay[i]){
+            weatherback.src = "source/Good.mp4";
+        }
+    }
+    for (i=0;i<RainDay.length;i++){
+        if (weathericon==RainDay[i]){
+            weatherback.src = "source/Rain.mp4";
+        }
+    }
+    for (i=0;i<Night.length;i++){
+        if (weathericon==Night[i]){
+            weatherback.src = "source/FineNight.mp4";
+        }
+    }
 }
 
 function retrieveWeather() {
