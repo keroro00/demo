@@ -140,7 +140,6 @@ function myFunction() {
 
 function ChangeBackground(){
     var weatherback = document.getElementById("weatherback");
-    weatherback.src = "source/Rain.mp4";
     var weathericon = parseInt(localStorage.getItem("nowIcon"));
     var SunnyDay =[50,51,52,53,54];
     var RainDay =[60,61,62,63,64,65];
