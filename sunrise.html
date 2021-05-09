@@ -32,6 +32,100 @@
         //    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
         // }
         </script>
+
+        <!-- selection JS-->
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+            
+
+            // var e = document.getElementById("ddlViewBy");
+            // var strUser = e.value;
+
+            // var e = document.getElementById("ddlViewBy");
+            // var strUser = e.options[e.selectedIndex].text;
+            // console.log()(strUser);
+
+            // var e = document.getElementById("ddlViewBy");
+            // function show(){
+            // var as = document.forms[0].ddlViewBy.value;
+            // var strUser = e.options[e.selectedIndex].value;
+            // console.log(as, strUser);
+            // }
+            // e.onchange=show;
+            // show();
+
+            
+            // function myNewFunction(sel) {
+            //     alert(sel.options[sel.selectedIndex].text);
+            // }
+
+            // function yearFunction(setYear) {
+            // // var year = setYear.options[setYear.selectedIndex].text;
+            //     alert(setYear.options[setYear.selectedIndex].text);
+            //     var year = setYear.options[setYear.selectedIndex].text;
+            //     console.log(year);
+            //     return year;
+            // }
+            // var byYear = yearFunction();
+            // console.log(byYear);
+            // var byYear = yearFunction();
+            // byYear = $("#yearSelect option:selected").text();
+            // var byYear = yearFunction()
+            // console.log(yearFunction(setYear));
+            // var e = document.getElementById("yearSelect");
+            // var byYear = e.value;
+            // console.log(byYear);
+            // var byYear;
+            // var byMonth;
+            // function dateFunction() {
+            //     var byYear = document.getElementById("yearSelect").value;
+            //     var byMonth = document.getElementById("monthSelect").value;
+            //     // document.getElementById("demo").innerHTML = x;
+            //     document.getElementById("demo1").innerHTML = byYear;
+            //     document.getElementById("demo2").innerHTML = byMonth;
+            //     return byYear, byMonth;
+            // }
+            // console.log(byYear);
+            // console.log(byMonth);
+
+
+            // var d = $(function() {
+            //     $("#datepicker").datepicker({ 
+            //         dateFormat: "yy-mm-dd", 
+            //         minDate:new Date('2018-1-1'),
+            //         maxDate:new Date('2022-12-31'),
+            //         changeMonth: true,
+            //         changeYear: true,
+            //         onSelect: function(){
+            //             var selected = $(this).val();
+            //             // alert(selected);
+            //             // console.log(selected);
+            //         }
+            //     });
+            // });
+
+            // $("#datepicker").datepicker({ 
+            //         dateFormat: "yy-mm-dd", 
+            //         minDate:new Date('2018-1-1'),
+            //         maxDate:new Date('2022-12-31'),
+            //         changeMonth: true,
+            //         changeYear: true,
+            //         onSelect: function(){
+            //             var selected = $(this).val();
+            //             // alert(selected);
+            //             console.log(selected);
+            //         }
+            //     });
+
+            // console.log("this is:" + d);
+            // var momentD = moment(d).format('YYYY-MM-DD');
+            // console.log(momentD);
+
+
+        </script>
         </head>
         
 <body>
@@ -45,5 +139,54 @@
             <div class="col-sm-2"><p id="todaySunsetTime"></p></div>
         </div>
     </div>    
-</body>
+
+    <!-- selection -->
+    <link href="https://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet">
+    **Available dates from 2018 to 2022
+    <p>Selectable date：<input type="text" class="date" disabled="disabled"></p>
+    <p>Selected Date Sunrise Time:</p><p id="selectSunriseTime"></p>
+    <p>Selected Date Sunset Time:</p><p id="selectSunsetTime"></p>
+    <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(".date")
+        .datepicker({
+            dateFormat: "yy-mm-dd", 
+            minDate:new Date('2018-1-1'),
+            maxDate:new Date('2022-12-31'),
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            showOn: 'button',
+            buttonText: 'select date here',
+            onSelect: function(dateText) {
+                console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+                $(this).change();
+                var d = this.value;
+                var momentD = moment(d).format('YYYY-MM-DD');
+                console.log("momentD:" + momentD);
+                // console.log(this.value);
+                const myMomentObject = moment(momentD, 'YYYY-MM-DD')
+                console.log("myMomentObject.format():" + myMomentObject.format());
+                var selectYear = myMomentObject.format("YYYY");
+                console.log(selectYear);
+                var selectMonth = myMomentObject.format("MM");
+                console.log(selectMonth);
+                var selectDay = myMomentObject.format("DD");
+                console.log(selectDay);
+                $.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${selectYear}&month=${selectMonth}&day=${selectDay}`,function(srsdata){
+                console.log(srsdata);
+                console.log(srsdata.data[0][1])
+                console.log(srsdata.data[0][3])
+                document.getElementById("selectSunriseTime").innerHTML = srsdata.data[0][1];
+                document.getElementById("selectSunsetTime").innerHTML = srsdata.data[0][3];
+            },'json');
+            }
+        })
+        .on("change", function() {
+            console.log("Got change event from field");
+        });
+    </script>
+    <!-- end of selection -->
+    </body>
 </html>
