@@ -247,7 +247,7 @@ function whereNear(data){
 function displayToday(todayIcon,temperature,rainfall){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
-    localStorage.setItem("nowIcon");
+    localStorage.setItem("nowIcon",todayIcon);
     if(whereNear(rainfall) == undefined){
         document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
     }else{
