@@ -11,7 +11,6 @@ var userLocation = {
 
 var Maxarray =[];
 var Minarray =[];
-var NowWeatherIcon=0;
 var latitudeOfStation = [];
     latitudeOfStation[0]= 22.31194; //King's Park
     latitudeOfStation[1]= 22.30194; //Hong Kong Observatory
@@ -73,26 +72,10 @@ function initialize() {
         retrieveWeather();
         retrieveForecast();
         retrieveSituation();
-        ChangeBackground();
+        //ChangeBackground();
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
-      //var weatherback = getElementById("weather");  grab the background
-        //getElementById("weather").style = 
-        //if (weather= sunny){
-        //  if (time is within 0800to 1000){weatherback.style =} Set the background
-        //wlse if (weather= cloudy){weatherback.style =}
-        //else if (weather=  rainy){weatherback.style =}
-        //
-        /*  var weatherback = getElementById("weather");
-        
-        var weathericon = JSON.parse(xhr.response).icon;
-        
-        if (weathericon = 50){
-          {weatherback.style = "06_1596083776.mp4"}//if (time is within 0800to 1000)
-        else if (weathericon = 63){weatherback.style = "Rain - 28236.mp4"}*/
-        //else if (weathericon = 50){weatherback.style =}
-        //
        
         
         if(gpsPermission == 'undefined'){
@@ -118,11 +101,9 @@ function initialize() {
             updateLocation();
         }else{
             TestGeo(); 
-        }
-  
-        
-        
+        }     
 }
+
 // Get the video
 var video = document.getElementById("weatherback");
 
@@ -138,7 +119,7 @@ function myFunction() {
   }
 }
 
-function ChangeBackground(){
+/*function ChangeBackground(){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(localStorage.getItem("nowIcon"));
     var SunnyDay =[50,51,52,53,54];
@@ -159,8 +140,7 @@ function ChangeBackground(){
             weatherback.src = "source/FineNight.mp4";
         }
     }
-}
-
+}*/
 function retrieveWeather() {
     console.log("Retrieving temperature ");
     const xhr = new XMLHttpRequest();
