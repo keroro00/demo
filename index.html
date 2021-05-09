@@ -118,6 +118,7 @@
 	</div>
 
 	<hr>
+	<!-- Sunrise / Sunset -->
 	<div class = "row justify-content-center">
 				<div class ="col-4">
 					<p class="text-center">Today sunrise:</p>
@@ -129,6 +130,55 @@
 					<p class="text-center" id="todaySunsetTime"></p>
 				</div>
 	</div>
+
+	<!-- Sunrise / Sunset selection -->
+    <link href="https://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet">
+    **Available dates from 2018 to 2022
+    <p>Selectable date：<input type="text" class="date" disabled="disabled"></p>
+    <p>Selected Date Sunrise Time:</p><p id="selectSunriseTime"></p>
+    <p>Selected Date Sunset Time:</p><p id="selectSunsetTime"></p>
+    <script src="https://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(".date")
+        .datepicker({
+            dateFormat: "yy-mm-dd", 
+            minDate:new Date('2018-1-1'),
+            maxDate:new Date('2022-12-31'),
+            changeMonth: true,
+            changeYear: true,
+            constrainInput: true,
+            showOn: 'button',
+            buttonText: 'select date here',
+            onSelect: function(dateText) {
+                console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+                $(this).change();
+                var d = this.value;
+                var momentD = moment(d).format('YYYY-MM-DD');
+                console.log("momentD:" + momentD);
+                // console.log(this.value);
+                const myMomentObject = moment(momentD, 'YYYY-MM-DD')
+                console.log("myMomentObject.format():" + myMomentObject.format());
+                var selectYear = myMomentObject.format("YYYY");
+                console.log(selectYear);
+                var selectMonth = myMomentObject.format("MM");
+                console.log(selectMonth);
+                var selectDay = myMomentObject.format("DD");
+                console.log(selectDay);
+                $.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${selectYear}&month=${selectMonth}&day=${selectDay}`,function(srsdata){
+                console.log(srsdata);
+                console.log(srsdata.data[0][1])
+                console.log(srsdata.data[0][3])
+                document.getElementById("selectSunriseTime").innerHTML = srsdata.data[0][1];
+                document.getElementById("selectSunsetTime").innerHTML = srsdata.data[0][3];
+            },'json');
+            }
+        })
+        .on("change", function() {
+            console.log("Got change event from field");
+        });
+    </script>
+    <!-- end of Sunrise / Sunset selection -->
 
 
 </div>
