@@ -140,7 +140,7 @@ function ChangeBackground(){
             weatherback.src = "source/FineNight.mp4";
         }
     }
-}*/
+}
 function retrieveWeather() {
     console.log("Retrieving temperature ");
     const xhr = new XMLHttpRequest();
