@@ -72,7 +72,7 @@ function initialize() {
         retrieveWeather();
         retrieveForecast();
         retrieveSituation();
-        //ChangeBackground();
+        ChangeBackground();
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
@@ -119,7 +119,7 @@ function myFunction() {
   }
 }
 
-/*function ChangeBackground(){
+function ChangeBackground(){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(localStorage.getItem("nowIcon"));
     var SunnyDay =[50,51,52,53,54];
@@ -137,10 +137,10 @@ function myFunction() {
     }
     for (i=0;i<Night.length;i++){
         if (weathericon==Night[i]){
-            weatherback.src = "source/FineNight.mp4";
+            weatherback.src = "source/Rain.mp4"; //有片再轉番
         }
     }
-}*/
+}
 function retrieveWeather() {
     console.log("Retrieving temperature ");
     const xhr = new XMLHttpRequest();
@@ -247,6 +247,7 @@ function whereNear(data){
 function displayToday(todayIcon,temperature,rainfall){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
+    localStorage.setItem("nowIcon");
     if(whereNear(rainfall) == undefined){
         document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
     }else{
