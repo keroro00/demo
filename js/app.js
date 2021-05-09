@@ -72,7 +72,7 @@ function initialize() {
         retrieveWeather();
         retrieveForecast();
         retrieveSituation();
-        //ChangeBackground();
+        ChangeBackground();
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
@@ -119,7 +119,7 @@ function myFunction() {
   }
 }
 
-/*function ChangeBackground(){
+function ChangeBackground(){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(localStorage.getItem("nowIcon"));
     var SunnyDay =[50,51,52,53,54];
