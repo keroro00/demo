@@ -1,4 +1,10 @@
 
+body{
+  background-repeat: no-repeat;
+  background-attachment: fixed;  
+  background-size: cover;
+}
+
 .TodayDetail {
     width: 50%;
     margin: 0 auto;
