@@ -423,8 +423,8 @@ function updateLocation(){
 }
 function showChart(){
   var xValues = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-  var yValues = [26,29,32,28,28,29,30];
-  var yValues2 = [19,21,22,24,20,18,19];
+  var yValues = Maxarray;
+  var yValues2 = Minarray;
 
  
 
