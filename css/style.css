@@ -15,15 +15,6 @@ body{
     margin: 0 auto;
   }
 
- /* Style the video: 100% width and height to cover the entire window */
- #weatherback {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    min-width: 100%;
-    min-height: 100%;
-  }
-
   /* Add some content at the bottom of the video/page */
   .maincontent {
     position: fixed;
