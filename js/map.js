@@ -267,22 +267,29 @@ function initMap(){
 function ChangeBackground(todayIcon){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(todayIcon);
-    var SunnyDay =[50,51,52,60,61,80,81,82,83,84,85,90,91,92,93];
+    var SunnyDay =[50,51,80,81,82,83,84,85,90,91,92,93];
+    var CloudyDay = [52,60,61];
     var RainDay =[53,54,62,63,64,65];
     var Night=[70,71,72,73,74,75,76,77];
+
     for (i=0;i<SunnyDay.length;i++){
         if (weathericon==SunnyDay[i]){
-            weatherback.src = "source/Good.mp4";
+            document.body.style.backgroundImage = "url('source/Sunny.gif')";
+        }
+    }
+    for(i=0;i<CloudyDay.length;i++){
+        if (weathericon==CloudyDay[i]){
+            document.body.style.backgroundImage = "url('source/Cloudy.gif')";
         }
     }
     for (i=0;i<RainDay.length;i++){
         if (weathericon==RainDay[i]){
-            weatherback.src = "source/Rain.mp4";
+            document.body.style.backgroundImage = "url('source/Rain.gif')";
         }
     }
     for (i=0;i<Night.length;i++){
         if (weathericon==Night[i]){
-            weatherback.src = "source/FineNight.mp4"; 
+            document.body.style.backgroundImage = "url('source/FineNight.gif')";
         }
     }
 }
