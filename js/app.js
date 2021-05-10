@@ -268,7 +268,11 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
     setTimeout(function(){
         document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
         document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
-        document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
+        if(whereNear(rainfall) == undefined){
+            document.getElementById("rainfall").innerHTML="0mm";
+        }else{
+            document.getElementById("rainfall").innerHTML=whereNear(rainfall) + "mm";
+        }
         document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
         document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
         document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
@@ -277,11 +281,6 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
         document.getElementById("visibility").innerHTML = localStorage.getItem("visibility")/1000 + "km";
 
         console.log("Getting rainfall");
-        if(whereNear(rainfall) == undefined){
-            document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
-        }else{
-            document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
-        }
         console.log("Rainfall displayed");
     },500);
   
