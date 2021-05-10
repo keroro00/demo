@@ -173,7 +173,7 @@ function retrieveWeather() {
 
 function retrieveForecast() {
     const xhr = new XMLHttpRequest();
-    const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc";
+    const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd";
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
