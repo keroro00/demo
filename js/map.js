@@ -203,7 +203,7 @@ function initMap(){
 	locationButton.classList.add("custom-map-control-button");
 	map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
 	locationButton.addEventListener("click", function (){
-		if(gpsPermission == 'false'){
+
 			console.log("Getting permission");
 			navigator.geolocation.getCurrentPosition(resetLocation, positionError, {
             maximumAge: 30000, 
@@ -212,23 +212,10 @@ function initMap(){
             sessionStorage.setItem("gpsPermission", true);
 	        updateLocation();
 	        retrieveWeather();
-		}else if(gpsPermission == 'true'){
-			navigator.geolocation.getCurrentPosition( function(position){
-				//get the latitude and longitude
-			    latitude = position.coords.latitude;
-			    longitude = position.coords.longitude;
-
-			    //save the current location for offline use
-			    localStorage.setItem("latitude", latitude);
-			    localStorage.setItem("longitude", longitude);
-			    updateLocation();
-	        	retrieveWeather();
-			}, function(err){
-				console.log(err);
-			});
-		}
+		
 			
 	});
+
 
   	//create marker, marked the latest location
   	marker = new google.maps.Marker({
@@ -340,8 +327,10 @@ function geoCoding(userLocation){
       console.log("Geocoder failed due to: " + status);
       if(status == 'OVER_QUERY_LIMIT'){
       		display.innerHTML ="<font color='red'>OVER_REQUEST_LIMIT</font>";
+      }else{
+      	display.innerHTML ="<font color='red'>Not a valid location</font>";
       }
-      display.innerHTML ="<font color='red'>Not a valid location</font>";
+      
 	}
 	});
 }
