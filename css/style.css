@@ -29,9 +29,10 @@
     overflow: auto;
   }
 
-  .center {
+  table {
     margin-left: auto;
     margin-right: auto;
+    table-layout: fixed;
   }
 
   .navbar {
