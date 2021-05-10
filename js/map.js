@@ -79,7 +79,7 @@ function initPage(){
         };
         console.log(userLocation);
         updateLocation();
-		setTimeout(updateLocation,3000);
+		setTimeout(updateLocation,300);
 	}else if(gpsPermission == 'false' && 
         (localStorage.getItem("latitude") != null && 
             localStorage.getItem("longitude") != null)){
@@ -90,13 +90,13 @@ function initPage(){
         };
         defaultLocation = false;
         updateLocation();
-        setTimeout(updateLocation,3000);
+        setTimeout(updateLocation,300);
     }else if(gpsPermission == 'false' && 
         (localStorage.getItem("latitude") == null && 
             localStorage.getItem("longitude") == null)){
         console.log("Permission denied, last found location not found, using default location");
         defaultLocation = true;
-        setTimeout(updateLocation,3000);
+        setTimeout(updateLocation,300);
     }else {
     	console.log("Error");
     }
@@ -534,7 +534,7 @@ function getLocation(position) {
     //Update once
     updateLocation();
     // Update location periodly
-    setInterval(updateLocation, 50000);
+    setInterval(updateLocation, 80000);
     
 }
 
