@@ -282,7 +282,31 @@ function addRowForecast(forecast) {
     var forecastWeek = document.getElementById("forecastWeek");
     var Weekrow = forecastWeek.insertCell();
     Weekrow.setAttribute('data-label', "week");
-    Weekrow.innerHTML = forecast.week;
+        var week='';
+    switch (forecast.week){
+        case 'Monday':
+            week = "Mon";
+            break;
+        case 'Tuesday':
+            week = "Tue";
+            break;
+        case 'Wednesday':
+            week = "Wed";
+            break;  
+        case 'Thursday':
+            week = "Thur";
+            break; 
+        case 'Friday':
+            week = "Fri";
+            break;
+        case 'Saturday':
+            week = "Sat";
+            break;
+        case 'Sunday':
+            week = "Sun";
+            break;
+    }
+    Weekrow.innerHTML =week;
 
     var forecastMaxTemp = document.getElementById("forecastMaxTemp"); //highest temp
     var MaxTemprow = forecastMaxTemp.insertCell();
