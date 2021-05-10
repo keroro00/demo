@@ -96,8 +96,16 @@ function initialize() {
                 lat: parseFloat(localStorage.getItem("latitude")), 
                 lng: parseFloat(localStorage.getItem("longitude")) 
             };
-            //Update once
-            updateLocation();
+            console.log(userLocation.lat.value);
+            if(userLocation.lat.value == undefined || userLocation.lng.value == undefined){
+                console.log("Getting default location");
+                userLocation = { 
+                    lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+                    lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+                };
+            }
+            console.log(userLocation);
+            geoCoding(userLocation);
         }else{
             TestGeo(); 
         }     

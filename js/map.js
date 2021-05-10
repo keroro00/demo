@@ -1,5 +1,5 @@
 window.alert = function() { };
-var gpsPermission =  localStorage.getItem("gpsPermission");
+var gpsPermission =  sessionStorage.getItem("gpsPermission");
 var gettingData = false;
 var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
 var geoJSON;
@@ -71,7 +71,7 @@ var longitudeOfStation = [];
 function initPage(){
 	initMap();
 	if(gpsPermission == 'true'){
-		console.log('true');
+		console.log('GPS permitted');
 		userLocation = { 
             lat: parseFloat(localStorage.getItem("latitude")), 
             lng: parseFloat(localStorage.getItem("longitude")) 
@@ -95,8 +95,10 @@ function initPage(){
             localStorage.getItem("longitude") == null)){
         console.log("Permission denied, last found location not found, using default location");
         defaultLocation = true;
-        //setTimeout(updateLocation,3000);
-    } 
+        setTimeout(updateLocation,3000);
+    }else {
+    	console.log("WTF");
+    }
 	
 	retrieveWeather();
 	
@@ -207,8 +209,6 @@ function initMap(){
             enableHighAccuracy: true});
 	        updateLocation();
 	        retrieveWeather();
-		
-
 	});
 
   	//create marker, marked the latest location
