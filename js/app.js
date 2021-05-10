@@ -475,7 +475,7 @@ function showChart(){
   var yValues = Maxarray;
   var yValues2 = Minarray;
 
- 
+
 
   new Chart(document.getElementById("line-chart"), {
   type: "line",
@@ -484,27 +484,30 @@ function showChart(){
     datasets: [{
       fill: false,
       lineTension: 0,
-      backgroundColor: "rgba(255,255,255,1.0)",
-      borderColor: "rgba(255,255,255,0.8)",
+      backgroundColor: 'rgb(244,210,52)',
+      borderColor: 'rgb(244,210,52)',
       borderWidth: 1,
-      data: yValues
+      data: yValues,
+      label : "Highest",
     },{
       fill: false,
       lineTension: 0,
-      backgroundColor: "rgba(255,255,255,1.0)",
-      borderColor: "rgba(255,255,255,0.8)",
+      backgroundColor: 'white',
+      borderColor: 'white',
       borderWidth: 1,
-      data: yValues2
+      data: yValues2,
+      label : "Lowest",
     }]
   },
   options: {
-    legend: {display: false},
+    legend: {display: true,
+            labels: {fontColor: 'white'}
+            },
     scales: {
       yAxes: [{
         ticks: {
-          min: 10, max:36,
-             stepSize: 2,
-    fontColor: 'white'
+             stepSize: 1,
+             fontColor: 'white'
         }
       }],
 
