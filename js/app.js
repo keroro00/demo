@@ -66,13 +66,12 @@ var longitudeOfStation = [];
     longitudeOfStation[23]= 114.21694;
     longitudeOfStation[24]= 114.01833;
     longitudeOfStation[25]= 114.2375;
-
+var ChangeChance=0;
 function initialize() {
 
         retrieveWeather();
         retrieveForecast();
         retrieveSituation();
-        ChangeBackground();
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
@@ -119,9 +118,9 @@ function myFunction() {
   }
 }
 
-function ChangeBackground(){
+function ChangeBackground(todayIcon){
     var weatherback = document.getElementById("weatherback");
-    var weathericon = parseInt(localStorage.getItem("nowIcon"));
+    var weathericon = parseInt(todayIcon);
     var SunnyDay =[50,51,52,53,54];
     var RainDay =[60,61,62,63,64,65];
     var Night=[70,71,72,73,74,75,76,77];
@@ -253,7 +252,10 @@ function whereNear(data){
 function displayToday(todayIcon,temperature,rainfall,uvindex){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
-    
+    if (ChangeChance<1){
+    ChangeBackground(todayIcon);
+        ChangeChance++;
+    }
     setTimeout(function(){
     console.log("Getting rainfall");
     if(whereNear(rainfall) == undefined){
