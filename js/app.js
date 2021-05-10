@@ -9,7 +9,6 @@ var userLocation = {
     lng: parseFloat(localStorage.getItem("defaultLongitude")) 
 };
 
-var Weekarray=[];
 var Maxarray =[];
 var Minarray =[];
 var latitudeOfStation = [];
@@ -264,7 +263,7 @@ function displayForecast(forecast) {
     document.getElementById("forecastWeek").innerHTML="";
     document.getElementById("forecastMaxTemp").innerHTML="";
     document.getElementById("forecastMinTemp").innerHTML="";
-    for (i=0;i<7;i++){addRowForecast(forecast[i]);}
+    forecast.forEach(addRowForecast);
 }
 
 //Add the forecast in a row
@@ -283,33 +282,8 @@ function addRowForecast(forecast) {
     var forecastWeek = document.getElementById("forecastWeek");
     var Weekrow = forecastWeek.insertCell();
     Weekrow.setAttribute('data-label', "week");
-        var week='';
-    switch (forecast.week){
-        case 'Monday':
-            week = "Mon";
-            break;
-        case 'Tuesday':
-            week = "Tue";
-            break;
-        case 'Wednesday':
-            week = "Wed";
-            break;  
-        case 'Thursday':
-            week = "Thur";
-            break; 
-        case 'Friday':
-            week = "Fri";
-            break;
-        case 'Saturday':
-            week = "Sat";
-            break;
-        case 'Sunday':
-            week = "Sun";
-            break;
-    }
-    Weekrow.innerHTML =week;
-    Weekarray.push(week);
-    
+    Weekrow.innerHTML = forecast.week;
+
     var forecastMaxTemp = document.getElementById("forecastMaxTemp"); //highest temp
     var MaxTemprow = forecastMaxTemp.insertCell();
     MaxTemprow.setAttribute('data-label', "maxtemp");
@@ -448,7 +422,7 @@ function updateLocation(){
         }
 }
 function showChart(){
-  var xValues = Weekarray;
+  var xValues = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
   var yValues = Maxarray;
   var yValues2 = Minarray;
 
@@ -510,6 +484,9 @@ function sunTime(){
   document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
 },'json');
 
+  var displayToday = today.format('LLLL');
+  console.log(displayToday);
+  document.getElementById("indexDisplayToday").innerHTML = displayToday;
 // function displaySRS(srsdata){
 //    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
 // }
