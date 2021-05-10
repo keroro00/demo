@@ -137,7 +137,7 @@ function ChangeBackground(){
     }
     for (i=0;i<Night.length;i++){
         if (weathericon==Night[i]){
-            weatherback.src = "source/Rain.mp4"; //有片再轉番
+            weatherback.src = "source/GoodNight.mp4"; //有片再轉番
         }
     }
 }
