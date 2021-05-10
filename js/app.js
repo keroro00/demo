@@ -296,7 +296,7 @@ function addRowForecast(forecast) {
     var Iconrow = forecastIcon.insertCell();
     var Iconurl = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+forecast.ForecastIcon+".png"
     Iconrow.setAttribute('data-label', "icon");
-    Iconrow.innerHTML = "<img src= "+Iconurl+" width=\"50\" height=\"50\">";
+    Iconrow.innerHTML = "<img src= "+Iconurl+" width=\"40\" height=\"40\">";
 
     var forecastDate = document.getElementById("forecastDate");
     var Daterow = forecastDate.insertCell();
