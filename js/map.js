@@ -1,12 +1,13 @@
 window.alert = function() { };
 var gpsPermission =  sessionStorage.getItem("gpsPermission");
 var gettingData = false;
-var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
+var openWeatherMapKey = "aa50e1fbb29f1400fe5d6a121453eda5";
 var geoJSON;
 var map;
 var marker;
 var request;
 var defaultLocation;
+var ChangeChance=0;
 var userLocation = { 
         lat: parseFloat(localStorage.getItem("defaultLatitude")), 
         lng: parseFloat(localStorage.getItem("defaultLongitude")) 
@@ -97,7 +98,7 @@ function initPage(){
         defaultLocation = true;
         setTimeout(updateLocation,3000);
     }else {
-    	console.log("WTF");
+    	console.log("Error");
     }
 	
 	retrieveWeather();
@@ -258,6 +259,29 @@ function initMap(){
 
 }
 
+function ChangeBackground(todayIcon){
+    var weatherback = document.getElementById("weatherback");
+    var weathericon = parseInt(todayIcon);
+    var SunnyDay =[50,51,52,60,61,80,81,82,83,84,85,90,91,92,93];
+    var RainDay =[53,54,62,63,64,65];
+    var Night=[70,71,72,73,74,75,76,77];
+    for (i=0;i<SunnyDay.length;i++){
+        if (weathericon==SunnyDay[i]){
+            weatherback.src = "source/Good.mp4";
+        }
+    }
+    for (i=0;i<RainDay.length;i++){
+        if (weathericon==RainDay[i]){
+            weatherback.src = "source/Rain.mp4";
+        }
+    }
+    for (i=0;i<Night.length;i++){
+        if (weathericon==Night[i]){
+            weatherback.src = "source/FineNight.mp4"; 
+        }
+    }
+}
+
 //function for coding the geolocation from the marker's latitude and longitude
 function geoCoding(userLocation){
 	const geocoder = new google.maps.Geocoder();
@@ -411,6 +435,7 @@ var getWeather = function(northLat, eastLng, southLat, westLng) {
   var proccessResults = function() {
 	    console.log(this);
 	    var results = JSON.parse(this.responseText);
+	    console.log(results);
 	    if (results.list.length > 0) {
 	        resetData();
 	        for (var i = 0; i < results.list.length; i++) {
@@ -520,68 +545,30 @@ function resetLocation(position){
     
 }
 
-function getCity(){
-	var country = null, countryCode = null, city = null, cityAlt = null;
-    var c, lc, component;
-    for (var r = 0, rl = results.length; r < rl; r += 1) {
-        var result = results[r];
-
-        if (!city && result.types[0] === 'locality') {
-            for (c = 0, lc = result.address_components.length; c < lc; c += 1) {
-                component = result.address_components[c];
-
-                if (component.types[0] === 'locality') {
-                    city = component.long_name;
-                    break;
-                }
-            }
-        }
-        else if (!city && !cityAlt && result.types[0] === 'administrative_area_level_1') {
-            for (c = 0, lc = result.address_components.length; c < lc; c += 1) {
-                component = result.address_components[c];
-
-                if (component.types[0] === 'administrative_area_level_1') {
-                    cityAlt = component.long_name;
-                    break;
-                }
-            }
-        } else if (!country && result.types[0] === 'country') {
-            country = result.address_components[0].long_name;
-            countryCode = result.address_components[0].short_name;
-        }
-
-        if (city && country) {
-            break;
-        }
-    }
-    console.log("City: " + city + ", City2: " + cityAlt + ", Country: " + country + ", Country Code: " + countryCode);
-}
-
-
-
-
-
 //Display the weather of today
 function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
+	if (ChangeChance<1){
+            ChangeBackground(todayIcon);
+            ChangeChance++;
+        }
+
 	setTimeout(function(){
+		if(uvindex == ""){
+            	document.getElementById("uvindex").innerHTML = "0/10";
+        }else{
+        	document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
+        }
 		document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
 	    document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
 	    document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
-	    document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
+	    
 	    document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
 	    document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
 	    document.getElementById("windDegrees").innerHTML = localStorage.getItem("windDegrees") + "°";
 		document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
 		document.getElementById("visibility").innerHTML = localStorage.getItem("visibility")/1000 + "km";
 
-	    console.log("Getting rainfall");
-	    if(whereNear(rainfall) == undefined){
-	        document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
-	    }else{
-	        document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
-	    }
-	    console.log("Rainfall displayed");
-	},500);
+	},1000);
   
 }
 
@@ -597,6 +584,8 @@ function retrieveWeather() {
             var uvindex = JSON.parse(xhr.response).uvindex;
             var humidity = JSON.parse(xhr.response).humidity;
             var todayIcon = JSON.parse(xhr.response).icon;
+
+
 
             displayToday(todayIcon,temperature,rainfall,uvindex,humidity);
 

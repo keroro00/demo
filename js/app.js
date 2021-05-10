@@ -1,5 +1,8 @@
 var gpsPermission = sessionStorage.getItem("gpsPermission");
 console.log(gpsPermission);
+var openWeatherMapKey = "aa50e1fbb29f1400fe5d6a121453eda5";
+var gettingData = false;
+var request;
 
 //set the default location
 localStorage.setItem("defaultLatitude", 22.28552);
@@ -69,12 +72,13 @@ var longitudeOfStation = [];
 var ChangeChance=0;
 function initialize() {
 
-        retrieveWeather();
+        
         retrieveForecast();
         retrieveSituation();
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
+        getWeather();
        
         
         if(gpsPermission == 'undefined'){
@@ -109,6 +113,8 @@ function initialize() {
         }else{
             TestGeo(); 
         }     
+    retrieveWeather();
+    getWeather();
 }
 
 // Get the video
@@ -161,7 +167,7 @@ function ChangeBackground(todayIcon){
     }
 }
 function retrieveWeather() {
-    console.log("Retrieving temperature ");
+    console.log("Retrieving weather ");
     const xhr = new XMLHttpRequest();
     const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread";
 
@@ -262,39 +268,41 @@ function whereNear(data){
                 stationId = i;
             }
     }
+        if(data.data[stationId].value == undefined){
+            return (data.data[stationId].max);
+        }
         return ( data.data[stationId].value );
     }
     catch(err){
-        console.log(err);
+        return (data.stationId.max);
     }
     
 }
 
 //Display the weather of today
 function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
-
-        if (ChangeChance<1){
+    if (ChangeChance<1){
             ChangeBackground(todayIcon);
             ChangeChance++;
         }
+
     setTimeout(function(){
+        if(uvindex == ""){
+                document.getElementById("uvindex").innerHTML = "0/10";
+        }else{
+            document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
+        }
         document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
         document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
-        if(whereNear(rainfall) == undefined){
-            document.getElementById("rainfall").innerHTML="0mm";
-        }else{
-            document.getElementById("rainfall").innerHTML=whereNear(rainfall) + "mm";
-        }
-        document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
+        document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
+        
         document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
         document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
         document.getElementById("windDegrees").innerHTML = localStorage.getItem("windDegrees") + "°";
         document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
         document.getElementById("visibility").innerHTML = localStorage.getItem("visibility")/1000 + "km";
 
-        console.log("Getting rainfall");
-        console.log("Rainfall displayed");
-    },500);
+    },1000);
   
 }
 
@@ -365,10 +373,10 @@ function addRowForecast(forecast) {
     
 }
 
-    function GetMaxAndMin(Max,Min){   //the highest and lowest temperature for each day
-        Maxarray.push(Max);
-        Minarray.push(Min);
-    }
+function GetMaxAndMin(Max,Min){   //the highest and lowest temperature for each day
+    Maxarray.push(Max);
+    Minarray.push(Min);
+}
 
 
 //function that check if the brower support geolocation
@@ -489,6 +497,7 @@ function updateLocation(){
             geoCoding(latlng);
         }
 }
+
 function showChart(){
   var xValues = Weekarray;
   var yValues = Maxarray;
@@ -540,6 +549,7 @@ function showChart(){
   }
 });
 }
+
 function sunTime(){
 
   var today = new moment();
@@ -577,80 +587,40 @@ function sunTime(){
 Openweather function
 ***************************************************/
 // Make the weather request
-var getWeather = function(northLat, eastLng, southLat, westLng) {
-    gettingData = true;
-    var requestString = "http://api.openweathermap.org/data/2.5/box/city?bbox="
-                        + westLng + "," + northLat + "," //left top
-                        + eastLng + "," + southLat + "," //right bottom
-                        + map.getZoom()
-                        + "&cluster=yes&format=json&lang=en"
-                        + "&APPID=" + openWeatherMapKey;
-    request = new XMLHttpRequest();
-    request.onload = proccessResults;
-    request.open("get", requestString, true);
-    request.send();
-};
+// Clear data layer and geoJSON
 
-// Take the JSON results and proccess them
-  var proccessResults = function() {
-        console.log(this);
-        var results = JSON.parse(this.responseText);
-        if (results.list.length > 0) {
-            resetData();
-            for (var i = 0; i < results.list.length; i++) {
-              geoJSON.features.push(jsonToGeoJson(results.list[i]));
+
+
+
+function getWeather() {
+    console.log("Return data from Openweather");
+    const request = new XMLHttpRequest();
+    const requestString = "https://api.openweathermap.org/data/2.5/weather?q=hongkong&appid=" 
+                    + openWeatherMapKey;
+
+    request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+            var windSpeed = JSON.parse(request.response).wind.speed;
+            var windDegrees = JSON.parse(request.response).wind.deg;
+            var pressure = JSON.parse(request.response).pressure;
+            var visibility = JSON.parse(request.response).visibility;
+
+            
+
+            const localStorage = window.localStorage;
+            if (localStorage) {
+                localStorage.setItem("windSpeed", JSON.stringify(windSpeed));
+                localStorage.setItem("windDegrees", JSON.stringify(windDegrees));
+                localStorage.setItem("pressure", JSON.stringify(pressure));
+                localStorage.setItem("visibility", JSON.stringify(visibility));
+                
             }
-            drawIcons(geoJSON);
-
         }
-  };
+    };
 
-// For each result that comes back, convert the data to geoJSON
-function jsonToGeoJson(weatherItem) {
-    var feature = {
-      type: "Feature",
-      properties: {
-        city: weatherItem.name,
-        weather: weatherItem.weather[0].main,
-        temperature: weatherItem.main.temp,
-        min: weatherItem.main.temp_min,
-        max: weatherItem.main.temp_max,
-        humidity: weatherItem.main.humidity,
-        pressure: weatherItem.main.pressure,
-        windSpeed: weatherItem.wind.speed,
-        windDegrees: weatherItem.wind.deg,
-        windGust: weatherItem.wind.gust,
-        visibility: weatherItem.visibility,
-        icon: "http://openweathermap.org/img/w/"
-              + weatherItem.weather[0].icon  + ".png",
-        coordinates: [weatherItem.coord.Lon, weatherItem.coord.Lat]
-      },
-      geometry: {
-        type: "Point",
-        coordinates: [weatherItem.coord.Lon, weatherItem.coord.Lat]
-      }
-      
-};
-
-// Set the custom marker icon
-map.data.setStyle(function(feature) {
-      return {
-        icon: {
-          url: feature.getProperty('icon'),
-          anchor: new google.maps.Point(25, 25)
-        }
-      };
-});
-
-localStorage.setItem("windSpeed", weatherItem.wind.speed);
-localStorage.setItem("windDegrees", weatherItem.wind.deg);
-localStorage.setItem("pressure", weatherItem.main.pressure);
-localStorage.setItem("visibility", weatherItem.visibility);
-
-// returns object
-return feature;
+    request.open("get", requestString);
+    request.send();
+}
 
 
 
-  google.maps.event.addDomListener(window, 'load', initMap());
-  };
