@@ -263,7 +263,7 @@ function displayForecast(forecast) {
     document.getElementById("forecastWeek").innerHTML="";
     document.getElementById("forecastMaxTemp").innerHTML="";
     document.getElementById("forecastMinTemp").innerHTML="";
-    forecast.forEach(addRowForecast);
+    for (i=0;i<7;i++){addRowForecast(forecast[i]);}
 }
 
 //Add the forecast in a row
