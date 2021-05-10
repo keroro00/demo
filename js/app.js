@@ -157,7 +157,7 @@ function ChangeBackground(todayIcon){
     }
     for (i=0;i<Night.length;i++){
         if (weathericon==Night[i]){
-            weatherback.src = "source/FineNight.mp4"; 
+            weatherback.src = "source/FineNight.GIF"; 
         }
     }
     for (i=0;i<GoodNight.length;i++){
