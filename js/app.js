@@ -117,21 +117,6 @@ function initialize() {
     getWeather();
 }
 
-// Get the video
-var video = document.getElementById("weatherback");
-
-
-// Pause and play the video, and change the button text
-function myFunction() {
-  if (video.paused) {
-    video.play();
-    btn.innerHTML = "Pause";
-  } else {
-    video.pause();
-    btn.innerHTML = "Play";
-  }
-}
-
 function ChangeBackground(todayIcon){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(todayIcon);
