@@ -132,7 +132,8 @@ function ChangeBackground(todayIcon){
     var SunnyDay =[50,51,80,81,82,83,84,85,90,91,92,93];
     var CloudyDay = [52,60,61];
     var RainDay =[53,54,62,63,64,65];
-    var Night=[70,71,72,73,74,75,76,77];
+    var Night=[70,71,72,74,75,76,77];
+    var GoodNight=[73];
     for (i=0;i<SunnyDay.length;i++){
         if (weathericon==SunnyDay[i]){
             weatherback.src = "source/Good.mp4";
@@ -151,6 +152,11 @@ function ChangeBackground(todayIcon){
     for (i=0;i<Night.length;i++){
         if (weathericon==Night[i]){
             weatherback.src = "source/FineNight.mp4"; 
+        }
+    }
+    for (i=0;i<GoodNight.length;i++){
+        if (weathericon==GoodNight[i]){
+            weatherback.src = "source/GoodNight.mp4"
         }
     }
 }
