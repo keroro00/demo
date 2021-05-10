@@ -150,18 +150,17 @@ function retrieveWeather() {
         if (xhr.readyState === 4) {
             var temperature = JSON.parse(xhr.response).temperature;
             var rainfall = JSON.parse(xhr.response).rainfall;
-            var todayIcon= JSON.parse(xhr.response).icon;
+            var uvindex = JSON.parse(xhr.response).uvindex;
+            var todayIcon = JSON.parse(xhr.response).icon;
 
-            console.log(rainfall);
-
-            displayToday(todayIcon,temperature,rainfall);
-
+            displayToday(todayIcon,temperature,rainfall,uvindex);
 
             const localStorage = window.localStorage;
             if (localStorage) {
                 localStorage.setItem("temperature", JSON.stringify(temperature));
                 localStorage.setItem("icon", JSON.stringify(TodayIcon));
                 localStorage.setItem("rainfall", JSON.stringify(rainfall));
+                localStorage.setItem("uvindex", JSON.stringify(uvindex));
             }
         }
     };
@@ -221,38 +220,59 @@ function retrieveSituation() {
 
 //Calculate Which station is near to user and show the temperature of it
 function whereNear(data){
-    var minimum = 1;
-    var stationId;
-   if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
-        latitudeOfUser = localStorage.getItem("latitude")
-        longitudeOfUser = localStorage.getItem("longitude")
-    }
-    else{
-        latitudeOfUser = localStorage.getItem("defaultLatitude");
-        longitudeOfUser = localStorage.getItem("defaultLongitude");
-    }
-    for (i=0;i<9;i++){
-        x = latitudeOfStation[i]-latitudeOfUser;
-        y = longitudeOfStation[i]-longitudeOfUser;
-        var Distance = Math.sqrt((x*x)+(y*y));
-        if (Distance < minimum){
-            minimum = Distance;
-            stationId = i;
+    
+    try{
+        var minimum = 1;
+        var stationId;
+       if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
+            latitudeOfUser = localStorage.getItem("latitude")
+            longitudeOfUser = localStorage.getItem("longitude")
         }
+        else{
+            latitudeOfUser = localStorage.getItem("defaultLatitude");
+            longitudeOfUser = localStorage.getItem("defaultLongitude");
+        }
+        for (i=0;i<9;i++){
+            x = latitudeOfStation[i]-latitudeOfUser;
+            y = longitudeOfStation[i]-longitudeOfUser;
+            var Distance = Math.sqrt((x*x)+(y*y));
+            if (Distance < minimum){
+                minimum = Distance;
+                stationId = i;
+            }
     }
-    return ( data.data[stationId].value );
+        return ( data.data[stationId].value );
+    }
+    catch(err){
+        console.log(err);
+    }
+    
 }
 
 //Display the weather of today
-function displayToday(todayIcon,temperature,rainfall){
+function displayToday(todayIcon,temperature,rainfall,uvindex){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
-    localStorage.setItem("nowIcon",todayIcon);
+    
+    setTimeout(function(){
+    console.log("Getting rainfall");
     if(whereNear(rainfall) == undefined){
         document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
     }else{
         document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
     }
+    console.log("Rainfall displayed");
+
+    
+        console.log("Getting uv index");
+            if(whereNear(uvindex) == undefined){
+                document.getElementById("uvindex").innerHTML="UV index: 0";
+            }else{
+                document.getElementById("uvindex").innerHTML="UVindex: " + whereNear(uvindex);
+            }
+            console.log("UV index displayed");
+    },1000);
+    
     
 }
 

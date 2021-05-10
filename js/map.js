@@ -1,5 +1,5 @@
 window.alert = function() { };
-var gpsPermission =  sessionStorage.getItem("gpsPermission");
+var gpsPermission =  localStorage.getItem("gpsPermission");
 var gettingData = false;
 var openWeatherMapKey = "74b8a4e9e597a5d689d11a55ddc1405e";
 var geoJSON;
@@ -77,6 +77,7 @@ function initPage(){
             lng: parseFloat(localStorage.getItem("longitude")) 
         };
         console.log(userLocation);
+        updateLocation();
 		setTimeout(updateLocation,3000);
 	}else if(gpsPermission == 'false' && 
         (localStorage.getItem("latitude") != null && 
@@ -87,13 +88,14 @@ function initPage(){
             lng: parseFloat(localStorage.getItem("longitude")) 
         };
         defaultLocation = false;
+        updateLocation();
         setTimeout(updateLocation,3000);
     }else if(gpsPermission == 'false' && 
         (localStorage.getItem("latitude") == null && 
             localStorage.getItem("longitude") == null)){
         console.log("Permission denied, last found location not found, using default location");
         defaultLocation = true;
-        setTimeout(updateLocation,3000);
+        //setTimeout(updateLocation,3000);
     } 
 	
 	retrieveWeather();
@@ -103,7 +105,7 @@ function initPage(){
 //function that initialize the google map component
 function initMap(){
 	console.log("initMap");
-	console.log(userLocation);
+	console.log("User locaion: "+userLocation);
 
   	// The map, centered at latest location
   	map = new google.maps.Map(document.getElementById("map"),
@@ -470,7 +472,7 @@ function getLocation(position) {
     localStorage.setItem("longitude", longitude);
     console.log(latitude);
     console.log(longitude);
-    sessionStorage.setItem("gpsPermission", true);
+    localStorage.setItem("gpsPermission", true);
     console.log("GPS premitted");
     
     //Update once
@@ -490,7 +492,7 @@ function resetLocation(position){
     localStorage.setItem("longitude", longitude);
     console.log(latitude);
     console.log(longitude);
-    sessionStorage.setItem("gpsPermission", true);
+    localStorage.setItem("gpsPermission", true);
     console.log("GPS premitted");
 
     userLocation = { 
@@ -553,17 +555,25 @@ function getCity(){
 function displayToday(todayIcon,temperature,rainfall,uvindex){
     document.getElementById("TodayIcon").src="https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
     document.getElementById("TodayTemp").innerHTML=whereNear(temperature)+ "°C";
+    
+    setTimeout(function(){
+    console.log("Getting rainfall");
     if(whereNear(rainfall) == undefined){
-    	document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
+        document.getElementById("rainfall").innerHTML="Rainfall: 0mm";
     }else{
-    	document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
+        document.getElementById("rainfall").innerHTML="Rainfall: " + whereNear(rainfall) + "mm";
     }
+    console.log("Rainfall displayed");
 
-    if(whereNear(uvindex) == undefined){
-    	document.getElementById("uvindex").innerHTML="UV index: 0";
-    }else{
-    	document.getElementById("uvindex").innerHTML="UVindex: " + whereNear(uvindex);
-    }
+    
+        console.log("Getting uv index");
+            if(whereNear(uvindex) == undefined){
+                document.getElementById("uvindex").innerHTML="UV index: 0";
+            }else{
+                document.getElementById("uvindex").innerHTML="UVindex: " + whereNear(uvindex);
+            }
+            console.log("UV index displayed");
+    },1000);
     
     
 }
@@ -577,14 +587,10 @@ function retrieveWeather() {
         if (xhr.readyState === 4) {
             var temperature = JSON.parse(xhr.response).temperature;
             var rainfall = JSON.parse(xhr.response).rainfall;
-            var uvindex= JSON.parse(xhr.response).uvindex;
-            var todayIcon= JSON.parse(xhr.response).icon;
-
-            console.log(rainfall);
-            console.log(uvindex);
+            var uvindex = JSON.parse(xhr.response).uvindex;
+            var todayIcon = JSON.parse(xhr.response).icon;
 
             displayToday(todayIcon,temperature,rainfall,uvindex);
-
 
             const localStorage = window.localStorage;
             if (localStorage) {
@@ -602,26 +608,33 @@ function retrieveWeather() {
 
 //Calculate Which station is near to user and show the temperature of it
 function whereNear(data){
-    var minimum = 1;
-    var stationId;
-   if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
-        latitudeOfUser = localStorage.getItem("latitude")
-        longitudeOfUser = localStorage.getItem("longitude")
+    
+    try{
+    	var minimum = 1;
+	    var stationId;
+	   if (localStorage.getItem("latitude")!= null & localStorage.getItem("longitude")!= null){
+	        latitudeOfUser = localStorage.getItem("latitude")
+	        longitudeOfUser = localStorage.getItem("longitude")
+	    }
+	    else{
+	        latitudeOfUser = localStorage.getItem("defaultLatitude");
+	        longitudeOfUser = localStorage.getItem("defaultLongitude");
+	    }
+	    for (i=0;i<9;i++){
+	        x = latitudeOfStation[i]-latitudeOfUser;
+	        y = longitudeOfStation[i]-longitudeOfUser;
+	        var Distance = Math.sqrt((x*x)+(y*y));
+	        if (Distance < minimum){
+	            minimum = Distance;
+	            stationId = i;
+	        }
     }
-    else{
-        latitudeOfUser = localStorage.getItem("defaultLatitude");
-        longitudeOfUser = localStorage.getItem("defaultLongitude");
+    	return ( data.data[stationId].value );
     }
-    for (i=0;i<9;i++){
-        x = latitudeOfStation[i]-latitudeOfUser;
-        y = longitudeOfStation[i]-longitudeOfUser;
-        var Distance = Math.sqrt((x*x)+(y*y));
-        if (Distance < minimum){
-            minimum = Distance;
-            stationId = i;
-        }
+    catch(err){
+    	console.log(err);
     }
-    return ( data.data[stationId].value );
+    
 }
 
 
