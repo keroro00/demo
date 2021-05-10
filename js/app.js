@@ -9,6 +9,7 @@ var userLocation = {
     lng: parseFloat(localStorage.getItem("defaultLongitude")) 
 };
 
+var Weekarray=[];
 var Maxarray =[];
 var Minarray =[];
 var latitudeOfStation = [];
@@ -307,7 +308,8 @@ function addRowForecast(forecast) {
             break;
     }
     Weekrow.innerHTML =week;
-
+    Weekarray.push(week);
+    
     var forecastMaxTemp = document.getElementById("forecastMaxTemp"); //highest temp
     var MaxTemprow = forecastMaxTemp.insertCell();
     MaxTemprow.setAttribute('data-label', "maxtemp");
@@ -446,7 +448,7 @@ function updateLocation(){
         }
 }
 function showChart(){
-  var xValues = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  var xValues = Weekarray;
   var yValues = Maxarray;
   var yValues2 = Minarray;
 
