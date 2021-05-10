@@ -121,8 +121,8 @@ function myFunction() {
 function ChangeBackground(todayIcon){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(todayIcon);
-    var SunnyDay =[50,51,52,53,54];
-    var RainDay =[60,61,62,63,64,65];
+    var SunnyDay =[50,51,52,60,61,80,81,82,83,84,85,90,91,92,93];
+    var RainDay =[53,54,62,63,64,65];
     var Night=[70,71,72,73,74,75,76,77];
     for (i=0;i<SunnyDay.length;i++){
         if (weathericon==SunnyDay[i]){
@@ -136,7 +136,7 @@ function ChangeBackground(todayIcon){
     }
     for (i=0;i<Night.length;i++){
         if (weathericon==Night[i]){
-            weatherback.src = "source/GoodNight.mp4"; //有片再轉番
+            weatherback.src = "source/FineNight.mp4"; 
         }
     }
 }
