@@ -555,9 +555,16 @@ function sunTime(){
   document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
 },'json');
 
-  var displayToday = today.format('LLLL');
-  console.log(displayToday);
-  document.getElementById("indexDisplayToday").innerHTML = displayToday;
+//   var displayToday = today.format('LLLL');
+//   console.log(displayToday);
+//   document.getElementById("indexDisplayToday").innerHTML = displayToday;
+  var displayDayOfToday = today.format('dddd');
+  document.getElementById("indexDisplayDayOfToday").innerHTML = displayDayOfToday;
+  var displayTodayDate = today.format('DD MMM [,]YYYY');
+  document.getElementById("indexDisplayTodayDate").innerHTML = displayTodayDate;
+  var displayTimeOfToday = today.format('LT');
+  document.getElementById("indexDisplayTimeOfToday").innerHTML = displayTimeOfToday;
+  
 // function displaySRS(srsdata){
 //    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
 // }
