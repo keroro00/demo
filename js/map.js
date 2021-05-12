@@ -475,7 +475,7 @@ function jsonToGeoJson(weatherItem) {
 	    humidity: weatherItem.main.humidity,
 	    pressure: weatherItem.main.pressure,
 	    windSpeed: weatherItem.wind.speed,
-	    windDegrees: weatherItem.wind.deg,
+	    windDegree: weatherItem.wind.deg,
 	    windGust: weatherItem.wind.gust,
 	    visibility: weatherItem.visibility,
 	    icon: "http://openweathermap.org/img/w/"
@@ -500,7 +500,7 @@ map.data.setStyle(function(feature) {
 });
 
 localStorage.setItem("windSpeed", weatherItem.wind.speed);
-localStorage.setItem("windDegrees", weatherItem.wind.deg);
+localStorage.setItem("windDegree", weatherItem.wind.deg);
 localStorage.setItem("pressure", weatherItem.main.pressure);
 localStorage.setItem("visibility", weatherItem.visibility);
 
@@ -574,13 +574,18 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
         }else{
         	document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
         }
+
 		document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
 	    document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
 	    document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
 	    
 	    document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
 	    document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
-	    document.getElementById("windDegrees").innerHTML = localStorage.getItem("windDegrees") + "°";
+	    document.getElementById("windDegree").innerHTML = localStorage.getItem("windDegree") + "°";
+
+	    getDirection(localStorage.getItem("windDegree"));
+	    document.getElementById("windDirection").innerHTML = localStorage.getItem("windDirection");
+
 		document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
 		document.getElementById("visibility").innerHTML = localStorage.getItem("visibility")/1000 + "km";
 
@@ -600,8 +605,6 @@ function retrieveWeather() {
             var uvindex = JSON.parse(xhr.response).uvindex;
             var humidity = JSON.parse(xhr.response).humidity;
             var todayIcon = JSON.parse(xhr.response).icon;
-
-
 
             displayToday(todayIcon,temperature,rainfall,uvindex,humidity);
 
@@ -655,4 +658,54 @@ function whereNear(data){
 }
 
 
+function getDirection(windDegree){
+	switch(windDegree){
+		case 0:
+			var result = "N";
+			break;
 
+		case 90:
+			var result = "E";
+			break;
+
+		case 180:
+			var result = "S";
+			break;
+
+		case 270:
+			var result = "W";
+			break;
+
+		case 360:
+			var result = "N";
+			break;
+
+		default:
+			if(windDegree>=40 && windDegree<=50){
+				var result = "NE";	//North east
+			}else if(windDegree>0 && windDegree<40){
+				var result = "NNE"	//North north east
+			}else if(windDegree>50 && windDegree<90){
+				var result = "ENE"	//East north east
+			}else if(windDegree>=130 && windDegree<=140){
+				var result = "SE"	//South east
+			}else if(windDegree>90 && windDegree<130){
+				var result = "ESE"	//East south east
+			}else if(windDegree>130 && windDegree<180){
+				var result = "SSE"	//South south east
+			}else if(windDegree>=220 && windDegree<=230){
+				var result = "SW"	//South west
+			}else if(windDegree>180 && windDegree<220){
+				var result = "SSW"	//South south west
+			}else if(windDegree>230 && windDegree<=270){
+				var result = "WSW"	//West south west
+			}else if(windDegree>=310 && windDegree<=320){
+				var result = "NW"	//North west
+			}else if(windDegree>270 && windDegree<310){
+				var result = "WNW"	//West north west
+			}else if(windDegree>320 && windDegree<360){
+				var result = "NNW"	//North north west
+			}
+	}
+	localStorage.setItem("windDerection", result);
+}
