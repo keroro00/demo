@@ -297,8 +297,6 @@ function ChangeBackground(todayIcon){
 function geoCoding(userLocation){
 	const geocoder = new google.maps.Geocoder();
 	var display = document.getElementById("address");
-
-	console.log(userLocation);
 	
 	geocoder.geocode({ location: userLocation }, (results, status) => {
     	if (status === "OK") {
@@ -347,14 +345,10 @@ function updateLocation(){
 
 	if(gpsPermission == 'true'){
 		console.log("Using real time location");
-		
-	        console.log(userLocation);
-	        marker.setPosition(new google.maps.LatLng(userLocation));
+	    marker.setPosition(new google.maps.LatLng(userLocation));
 
     }else if(gpsPermission == 'false' && defaultLocation == false){
     	console.log("Using last found location");
-    	
-    	console.log(userLocation);
 	    marker.setPosition(new google.maps.LatLng(userLocation));
     }
     else if(gpsPermission == 'false' && defaultLocation == true){
@@ -561,36 +555,41 @@ function resetLocation(position){
     
 }
 
-//Display the weather of today
+//Display the weather data of today
 function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
-	if (ChangeChance<1){
-            ChangeBackground(todayIcon);
-            ChangeChance++;
-        }
+    if (ChangeChance<1){
+        ChangeBackground(todayIcon);
+        ChangeChance++;
+    }
 
-	setTimeout(function(){
-		if(uvindex == ""){
-            	document.getElementById("uvindex").innerHTML = "0/10";
+    setTimeout(function(){
+        
+
+        document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
+        document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
+        
+        
+        
+        getDirection( parseInt(localStorage.getItem("windDegree")) );
+        document.getElementById("windDirection").style.transform = "rotate(" + (parseInt(localStorage.getItem("windDegree"))-45) + "deg)" ;
+        document.getElementById("windDegree").innerHTML = localStorage.getItem("windDegree") + "°";
+        document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
+
+        /* not displayed weather information
+		document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
+        document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
+        document.getElementById("visibility").innerHTML = (parseInt(localStorage.getItem("visibility"))/1000) + "km";
+		document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
+        
+        document.getElementById("windDirection").innerHTML = localStorage.getItem("windDirection");
+        if(uvindex == ""){
+                document.getElementById("uvindex").innerHTML = "0/10";
         }else{
-        	document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
+            document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
         }
-
-		document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
-	    document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
-	    document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
-	    
-	    document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
-	    document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
-	    document.getElementById("windDegree").innerHTML = localStorage.getItem("windDegree") + "°";
-
-	    getDirection(localStorage.getItem("windDegree"));
-	    document.getElementById("windDirection").innerHTML = localStorage.getItem("windDirection");
-
-		document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
-		document.getElementById("visibility").innerHTML = localStorage.getItem("visibility")/1000 + "km";
-
-	},1000);
-  
+        */
+        
+    },1000);
 }
 
 function retrieveWeather() {
@@ -657,55 +656,73 @@ function whereNear(data){
     
 }
 
-
+//function for getting the wind direction in word
 function getDirection(windDegree){
-	switch(windDegree){
-		case 0:
-			var result = "N";
-			break;
+    console.log(windDegree);
+    switch(windDegree){
+        case 0:
+            var result = "N";
+            console.log("North");
+            break;
 
-		case 90:
-			var result = "E";
-			break;
+        case 90:
+            var result = "E";
+            console.log("East");
+            break;
 
-		case 180:
-			var result = "S";
-			break;
+        case 180:
+            var result = "S";
+            console.log("South");
+            break;
 
-		case 270:
-			var result = "W";
-			break;
+        case 270:
+            var result = "W";
+            console.log("West");
+            break;
 
-		case 360:
-			var result = "N";
-			break;
+        case 360:
+            var result = "N";
+            console.log("North");
+            break;
 
-		default:
-			if(windDegree>=40 && windDegree<=50){
-				var result = "NE";	//North east
-			}else if(windDegree>0 && windDegree<40){
-				var result = "NNE"	//North north east
-			}else if(windDegree>50 && windDegree<90){
-				var result = "ENE"	//East north east
-			}else if(windDegree>=130 && windDegree<=140){
-				var result = "SE"	//South east
-			}else if(windDegree>90 && windDegree<130){
-				var result = "ESE"	//East south east
-			}else if(windDegree>130 && windDegree<180){
-				var result = "SSE"	//South south east
-			}else if(windDegree>=220 && windDegree<=230){
-				var result = "SW"	//South west
-			}else if(windDegree>180 && windDegree<220){
-				var result = "SSW"	//South south west
-			}else if(windDegree>230 && windDegree<=270){
-				var result = "WSW"	//West south west
-			}else if(windDegree>=310 && windDegree<=320){
-				var result = "NW"	//North west
-			}else if(windDegree>270 && windDegree<310){
-				var result = "WNW"	//West north west
-			}else if(windDegree>320 && windDegree<360){
-				var result = "NNW"	//North north west
-			}
-	}
-	localStorage.setItem("windDerection", result);
+        default:
+            if(windDegree>=40 && windDegree<=50){
+                var result = "SW";  //South west
+                console.log("South west");
+            }else if(windDegree>0 && windDegree<40){
+                var result = "SSW"  //South south west
+                console.log("South south west");
+            }else if(windDegree>50 && windDegree<90){
+                var result = "WSW"  //West south west
+                console.log("West south west");
+            }else if(windDegree>=130 && windDegree<=140){
+                var result = "NW"   //North west
+                console.log("North west");
+            }else if(windDegree>90 && windDegree<130){
+                var result = "WNW"  //West north west
+                console.log("West north west");
+            }else if(windDegree>130 && windDegree<180){
+                var result = "NNW"  //North north west
+                console.log("North north west");
+            }else if(windDegree>=220 && windDegree<=230){
+                var result = "NE"   //North east
+                console.log("North east");
+            }else if(windDegree>180 && windDegree<220){
+                var result = "NNE"  //North north east
+                console.log("North north east");
+            }else if(windDegree>230 && windDegree<=270){
+                var result = "ENE"  //East north east
+                console.log("East north east");
+            }else if(windDegree>=310 && windDegree<=320){
+                var result = "SE"   //South east
+                console.log("South east");
+            }else if(windDegree>270 && windDegree<310){
+                var result = "ESE"  //East south east
+                console.log("East south east");
+            }else if(windDegree>320 && windDegree<360){
+                var result = "SSE"  //South south east
+                console.log("South south east");
+            }
+    }
+    localStorage.setItem("windDirection", result);
 }

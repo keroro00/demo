@@ -70,69 +70,67 @@ var longitudeOfStation = [];
     longitudeOfStation[24]= 114.01833;
     longitudeOfStation[25]= 114.2375;
 var ChangeChance=0;
-function initialize() {
 
-        
-        retrieveForecast();
-        retrieveSituation();
-        setInterval(function(){        
-            retrieveWeather();    }, 5000);
-        setTimeout(function(){showChart();},1000);
-        setInterval(function(){
-            sunTime();  },60000);
-        getWeather();
+/***********************************************************
+Initialize main page
+***********************************************************/
+
+function initialize() {
+    ///retrieve data
+    retrieveForecast();
+    setInterval(retrieveWeather, 50000);
+    setTimeout(showChart,1000);
+    setInterval(sunTime,60000);
+    
        
-        
-        if(gpsPermission == 'undefined'){
-            sessionStorage.setItem('gpsPermission', null);
+    //determine permission
+    if(gpsPermission == 'undefined'){
+        sessionStorage.setItem('gpsPermission', null);
+    }
+    if(gpsPermission == 'true'){
+        console.log("GPS granted, no need to ask permission");
+        userLocation = { 
+            lat: parseFloat(localStorage.getItem("latitude")), 
+            lng: parseFloat(localStorage.getItem("longitude")) 
+        };
+        //Update once
+        updateLocation();
+        // Update location periodly
+        setInterval(updateLocation, 50000);
+    }else if(gpsPermission == 'false'){
+        console.log("GPS denied");
+        userLocation = { 
+            lat: parseFloat(localStorage.getItem("latitude")), 
+            lng: parseFloat(localStorage.getItem("longitude")) 
+        };
+        console.log(userLocation.lat.value);
+        if(userLocation.lat.value == undefined || userLocation.lng.value == undefined){
+            console.log("Getting default location");
+            userLocation = { 
+                lat: parseFloat(localStorage.getItem("defaultLatitude")), 
+                lng: parseFloat(localStorage.getItem("defaultLongitude")) 
+            };
         }
-        if(gpsPermission == 'true'){
-            console.log("GPS granted, no need to ask permission");
-            userLocation = { 
-                lat: parseFloat(localStorage.getItem("latitude")), 
-                lng: parseFloat(localStorage.getItem("longitude")) 
-            };
-            //Update once
-            updateLocation();
-            // Update location periodly
-            setInterval(updateLocation, 50000);
-        }else if(gpsPermission == 'false'){
-            console.log("GPS denied");
-            userLocation = { 
-                lat: parseFloat(localStorage.getItem("latitude")), 
-                lng: parseFloat(localStorage.getItem("longitude")) 
-            };
-            console.log(userLocation.lat.value);
-            if(userLocation.lat.value == undefined || userLocation.lng.value == undefined){
-                console.log("Getting default location");
-                userLocation = { 
-                    lat: parseFloat(localStorage.getItem("defaultLatitude")), 
-                    lng: parseFloat(localStorage.getItem("defaultLongitude")) 
-                };
-            }
-            console.log(userLocation);
-            geoCoding(userLocation);
-        }else{
-            TestGeo(); 
-        }     
+        console.log(userLocation);
+        geoCoding(userLocation);
+    }else{
+        TestGeo(); 
+    }
+
+    //retrieve weather information and display it 
     retrieveWeather();
     getWeather();
 }
-// Get the video
+
+
+/***********************************************************
+function for background video
+***********************************************************/
+
+// Get the background video
 var video = document.getElementById("weatherback");
 
-
-// Pause and play the video, and change the button text
-function myFunction() {
-  if (video.paused) {
-    video.play();
-    btn.innerHTML = "Pause";
-  } else {
-    video.pause();
-    btn.innerHTML = "Play";
-  }
-}
-
+//function for changing background
 function ChangeBackground(todayIcon){
     var weatherback = document.getElementById("weatherback");
     var weathericon = parseInt(todayIcon);
@@ -161,6 +159,14 @@ function ChangeBackground(todayIcon){
         }
     }
 }
+
+
+
+/***********************************************************
+functions for retrieving weather data from HK observatory
+***********************************************************/
+
+//function for retrieve temperature, rainfall, uv index, humidity and weather icon
 function retrieveWeather() {
     console.log("Retrieving weather ");
     const xhr = new XMLHttpRequest();
@@ -191,7 +197,7 @@ function retrieveWeather() {
     xhr.send();
 }
 
-
+//function for retrieve the future week's weather forecast
 function retrieveForecast() {
     const xhr = new XMLHttpRequest();
     const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd";
@@ -213,36 +219,59 @@ function retrieveForecast() {
     xhr.send();
 }
 
-function retrieveSituation() {
-    const xhr = new XMLHttpRequest();
-    const url = "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc";
+//show the chart of max, min temp for next week 
+function showChart(){
+  var xValues = Weekarray;
+  var yValues = Maxarray;
+  var yValues2 = Minarray;
 
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            var situation= JSON.parse(xhr.response).generalSituation;
-            var forecastPeriod= JSON.parse(xhr.response).forecastPeriod;
-            var forecastDesc= JSON.parse(xhr.response).forecastDesc;
-            var outlook= JSON.parse(xhr.response).outlook;
-            
-
-  
-            const localStorage = window.localStorage;
-            if (localStorage) {
-                localStorage.setItem("situation", JSON.stringify(situation));
-                localStorage.setItem("forecastPeriod", JSON.stringify(forecastPeriod));
-                localStorage.setItem("forecastDesc", JSON.stringify(forecastDesc));
-                localStorage.setItem("outlook", JSON.stringify(outlook));
+  new Chart(document.getElementById("line-chart"), {
+  type: "line",
+  data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: 'rgb(244,210,52)',
+          borderColor: 'rgb(244,210,52)',
+          borderWidth: 1,
+          data: yValues,
+          label : "Highest",
+        },{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: 'white',
+          borderColor: 'white',
+          borderWidth: 1,
+          data: yValues2,
+          label : "Lowest",
+        }]
+      },
+      options: {
+        legend: {display: true,
+                labels: {fontColor: 'white'}
+                },
+        scales: {
+          yAxes: [{
+            ticks: {
+                 stepSize: 1,
+                 fontColor: 'white'
             }
-        }
-    };
+          }],
 
-    xhr.open("get", url);
-    xhr.send();
+          xAxes: [{
+              ticks: {
+                  fontColor: 'white'
+              },
+          }]
+
+        }
+      }
+    });
 }
 
-//Calculate Which station is near to user and show the temperature of it
+//Calculate which weather station is near to user and get the weather data from it
 function whereNear(data){
-    
     try{
         var minimum = 1;
         var stationId;
@@ -269,17 +298,94 @@ function whereNear(data){
         return ( data.data[stationId].value );
     }
     catch(err){
-        return (data.stationId.max);
+        return (data.stationId.max);    //for catching UV undefined error
     }
     
 }
 
-//Display the weather of today
+//get the highest and lowest temperature for each day
+function GetMaxAndMin(Max,Min){   
+    Maxarray.push(Max);
+    Minarray.push(Min);
+}
+
+//function for getting the wind direction in word
+function getDirection(windDegree){
+    console.log(windDegree);
+    switch(windDegree){
+        case 0:
+            var result = "N";
+            console.log("North");
+            break;
+
+        case 90:
+            var result = "E";
+            console.log("East");
+            break;
+
+        case 180:
+            var result = "S";
+            console.log("South");
+            break;
+
+        case 270:
+            var result = "W";
+            console.log("West");
+            break;
+
+        case 360:
+            var result = "N";
+            console.log("North");
+            break;
+
+        default:
+            if(windDegree>=40 && windDegree<=50){
+                var result = "SW";  //South west
+                console.log("South west");
+            }else if(windDegree>0 && windDegree<40){
+                var result = "SSW"  //South south west
+                console.log("South south west");
+            }else if(windDegree>50 && windDegree<90){
+                var result = "WSW"  //West south west
+                console.log("West south west");
+            }else if(windDegree>=130 && windDegree<=140){
+                var result = "NW"   //North west
+                console.log("North west");
+            }else if(windDegree>90 && windDegree<130){
+                var result = "WNW"  //West north west
+                console.log("West north west");
+            }else if(windDegree>130 && windDegree<180){
+                var result = "NNW"  //North north west
+                console.log("North north west");
+            }else if(windDegree>=220 && windDegree<=230){
+                var result = "NE"   //North east
+                console.log("North east");
+            }else if(windDegree>180 && windDegree<220){
+                var result = "NNE"  //North north east
+                console.log("North north east");
+            }else if(windDegree>230 && windDegree<=270){
+                var result = "ENE"  //East north east
+                console.log("East north east");
+            }else if(windDegree>=310 && windDegree<=320){
+                var result = "SE"   //South east
+                console.log("South east");
+            }else if(windDegree>270 && windDegree<310){
+                var result = "ESE"  //East south east
+                console.log("East south east");
+            }else if(windDegree>320 && windDegree<360){
+                var result = "SSE"  //South south east
+                console.log("South south east");
+            }
+    }
+    localStorage.setItem("windDirection", result);
+}
+
+//Display the weather data of today
 function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
     if (ChangeChance<1){
-            ChangeBackground(todayIcon);
-            ChangeChance++;
-        }
+        ChangeBackground(todayIcon);
+        ChangeChance++;
+    }
 
     setTimeout(function(){
         if(uvindex == ""){
@@ -287,18 +393,26 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
         }else{
             document.getElementById("uvindex").innerHTML = uvindex.data[0].value + "/10";
         }
+
         document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
         document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
         document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
         
         document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
         document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
-        document.getElementById("windDegrees").innerHTML = localStorage.getItem("windDegrees") + "°";
-        document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
-        document.getElementById("visibility").innerHTML = localStorage.getItem("visibility")/1000 + "km";
+        
 
+        getDirection( parseInt(localStorage.getItem("windDegree")) );
+        document.getElementById("windDirection").style.transform = "rotate(" + (parseInt(localStorage.getItem("windDegree"))-45) + "deg)" ;
+        
+        document.getElementById("pressure").innerHTML = localStorage.getItem("pressure") + "hPa";
+        document.getElementById("visibility").innerHTML = (parseInt(localStorage.getItem("visibility"))/1000) + "km";
+
+        /*not displayed info
+        document.getElementById("windDegree").innerHTML = localStorage.getItem("windDegree") + "°";
+        document.getElementById("direction").innerHTML = localStorage.getItem("windDirection");
+        */
     },1000);
-  
 }
 
 //Display the future days weather forecast
@@ -364,15 +478,37 @@ function addRowForecast(forecast) {
     var MinTemprow = forecastMinTemp.insertCell();
     MinTemprow.setAttribute('data-label', "mintemp");
     MinTemprow.innerHTML = forecast.forecastMintemp.value+"°C";
-    GetMaxAndMin(forecast.forecastMaxtemp.value,forecast.forecastMintemp.value);
-    
+    GetMaxAndMin(forecast.forecastMaxtemp.value,forecast.forecastMintemp.value);    
 }
 
-function GetMaxAndMin(Max,Min){   //the highest and lowest temperature for each day
-    Maxarray.push(Max);
-    Minarray.push(Min);
+//get and display sunrise sundown time
+function sunTime(){
+
+  var today = new moment();
+  // console.log(today);
+  console.log(today.format());
+  var todayYear = today.format("YYYY");
+  var todayMonth = today.format("MM");
+  var todayDay = today.format("DD");
+  $.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${todayYear}&month=${todayMonth}&day=${todayDay}`,function(srsdata){
+  console.log(srsdata);
+  // console.log(srsdata.data[0][1])
+  document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
+  document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
+},'json');
+
+  var displayDayOfToday = today.format('dddd');
+  document.getElementById("indexDisplayDayOfToday").innerHTML = displayDayOfToday;
+  var displayTodayDate = today.format('DD MMM [,]YYYY');
+  document.getElementById("indexDisplayTodayDate").innerHTML = displayTodayDate;
+  var displayTimeOfToday = today.format('LT');
+  document.getElementById("indexDisplayTimeOfToday").innerHTML = displayTimeOfToday;
 }
 
+
+/***********************************************************
+functions for geolocation
+***********************************************************/
 
 //function that check if the brower support geolocation
 //if yes, then call the function getLocation
@@ -407,8 +543,7 @@ function getLocation(position) {
     //Update once
     updateLocation();
     // Update location periodly
-    setInterval(updateLocation, 50000);
-    
+    setInterval(updateLocation, 50000);  
 }
 
 //function that display any error inculde permission denied error
@@ -457,6 +592,7 @@ function positionError( error ) {
     } 
 }
 
+//function for reverse geocoding
 function geoCoding(latlng){
     console.log(latlng);
     const geocoder = new google.maps.Geocoder();
@@ -479,6 +615,7 @@ function geoCoding(latlng){
     });
 }
 
+//function for updating user location
 function updateLocation(){
     var permission = sessionStorage.getItem("gpsPermission");
         if(permission == true || 
@@ -493,99 +630,12 @@ function updateLocation(){
         }
 }
 
-function showChart(){
-  var xValues = Weekarray;
-  var yValues = Maxarray;
-  var yValues2 = Minarray;
-
-
-
-  new Chart(document.getElementById("line-chart"), {
-  type: "line",
-  data: {
-    labels: xValues,
-    datasets: [{
-      fill: false,
-      lineTension: 0,
-      backgroundColor: 'rgb(244,210,52)',
-      borderColor: 'rgb(244,210,52)',
-      borderWidth: 1,
-      data: yValues,
-      label : "Highest",
-    },{
-      fill: false,
-      lineTension: 0,
-      backgroundColor: 'white',
-      borderColor: 'white',
-      borderWidth: 1,
-      data: yValues2,
-      label : "Lowest",
-    }]
-  },
-  options: {
-    legend: {display: true,
-            labels: {fontColor: 'white'}
-            },
-    scales: {
-      yAxes: [{
-        ticks: {
-             stepSize: 1,
-             fontColor: 'white'
-        }
-      }],
-
-      xAxes: [{
-          ticks: {
-              fontColor: 'white'
-          },
-      }]
-
-    }
-  }
-});
-}
-
-function sunTime(){
-
-  var today = new moment();
-  // console.log(today);
-  console.log(today.format());
-  var todayYear = today.format("YYYY");
-  var todayMonth = today.format("MM");
-  var todayDay = today.format("DD");
-  $.get(`https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=SRS&lang=tc&rformat=json&year=${todayYear}&month=${todayMonth}&day=${todayDay}`,function(srsdata){
-  console.log(srsdata);
-  // console.log(srsdata.data[0][1])
-  document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
-  document.getElementById("todaySunsetTime").innerHTML = srsdata.data[0][3];
-},'json');
-
-//   var displayToday = today.format('LLLL');
-//   console.log(displayToday);
-//   document.getElementById("indexDisplayToday").innerHTML = displayToday;
-  var displayDayOfToday = today.format('dddd');
-  document.getElementById("indexDisplayDayOfToday").innerHTML = displayDayOfToday;
-  var displayTodayDate = today.format('DD MMM [,]YYYY');
-  document.getElementById("indexDisplayTodayDate").innerHTML = displayTodayDate;
-  var displayTimeOfToday = today.format('LT');
-  document.getElementById("indexDisplayTimeOfToday").innerHTML = displayTimeOfToday;
-  
-// function displaySRS(srsdata){
-//    document.getElementById("todaySunriseTime").innerHTML = srsdata.data[0][1];
-// }
-
-
-}
-
 
 /***************************************************
-Openweather function
+Openweather functions
 ***************************************************/
 // Make the weather request
 // Clear data layer and geoJSON
-
-
-
 
 function getWeather() {
     console.log("Return data from Openweather");
@@ -597,7 +647,7 @@ function getWeather() {
         if (request.readyState === 4) {
             var windSpeed = JSON.parse(request.response).wind.speed;
             var windDegrees = JSON.parse(request.response).wind.deg;
-            var pressure = JSON.parse(request.response).pressure;
+            var pressure = JSON.parse(request.response).main.pressure;
             var visibility = JSON.parse(request.response).visibility;
 
             
@@ -605,7 +655,7 @@ function getWeather() {
             const localStorage = window.localStorage;
             if (localStorage) {
                 localStorage.setItem("windSpeed", JSON.stringify(windSpeed));
-                localStorage.setItem("windDegrees", JSON.stringify(windDegrees));
+                localStorage.setItem("windDegree", JSON.stringify(windDegrees));
                 localStorage.setItem("pressure", JSON.stringify(pressure));
                 localStorage.setItem("visibility", JSON.stringify(visibility));
                 

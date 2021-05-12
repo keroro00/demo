@@ -17,51 +17,66 @@
 	<!--CSS-->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/style.css">
+	<link href="https://code.jquery.com/ui/1.9.2/themes/smoothness/jquery-ui.css" rel="stylesheet">
 
 	<!-- js -->
 	<script src="js/map.js"></script>
 	
 
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-	<!-- Title Navbar -->
-	<header class="navbar navbar-default navbar-inverse sticky-top">
-			<!--When collapse become a menu-->
-			<button class="navbar-toggler custom-toggler" data-toggle="collapse" type="button" data-target="#mainNav">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+	<!-- Google map & geocoder API -->
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtlaCz15ImfzCJnn5uPyQzPe3CgyBo2Co&map_ids=69f157b099d4f8cd&language=en"
+		async>
+	</script>
+	
+	<!--chart js-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-			<nav class="collapse navbar-collapse" id="mainNav">
-				<ul class="navbar-nav mr-auto">
-
-				<li class="nav-item">
-			      <a class="nav-link text-white" href="index.html">Main Page</a>
-			    </li>
-
-				<li class="nav-item">
-			      <a class="nav-link text-white" href="map.html" onclick="document.getElementById('main').innerHTML=window.open('map.html',_parent);">Map</a>
-			    </li>
-					<!-- -->
-				</ul>
-
-			</nav>
-	</header>
-
+	<!--Sunrise js-->
+	<script src="js/jquery.min.js"></script>
+	<script src="js/moment.js"></script>
 </head>
 
 <body onload="initPage(); ">
+
+<!-- Title Navbar -->
+<header class="navbar navbar-default navbar-inverse sticky-top">
+	<!--When collapse become a menu-->
+	<button class="navbar-toggler custom-toggler" data-toggle="collapse" type="button" data-target="#mainNav">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<nav class="collapse navbar-collapse" id="mainNav">
+		<ul class="navbar-nav mr-auto">
+
+			<li class="nav-item">
+		      	<a class="nav-link text-white topicFont" href="index.html">Main Page</a>
+		    </li>
+
+			<li class="nav-item">
+		      	<a class="nav-link text-white topicFont" href="map.html">Map</a>
+		    </li>
+
+			<li class="nav-item">
+	      		<a class="nav-link text-white topicFont" href="radar.html">Radar map</a>
+	    	</li>
+
+		</ul>
+
+	</nav>
+</header>
+
 <!--background-->
 <video autoplay muted loop id="weatherback">
 	<source src="source/Sunny.mp4" type="video/mp4">
   </video>
 
-	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtlaCz15ImfzCJnn5uPyQzPe3CgyBo2Co&map_ids=69f157b099d4f8cd&language=en"
-		async>
-	</script>
+
 
 	<div class="container-fluid maincontent page_content">
 		<div class="row">
@@ -79,22 +94,21 @@
 				<div class="display" id="TodayTemp">Loading location temperature...</div>
 			</div>
 			<div class="col-md-4">
+				<div class="display" id="windindex">Loading location wind speed...</div>
+				<div class="display" id="windDegree">Loading location wind degrees...</div>
+				<div class="display"><i class="fas fa-location-arrow" id="windDirection"></i></div>
 
+			<!--
 				<div class="display" id="rainfall">Loading location rainfall...</div>
 				<div class="display" id="uvindex">Loading location uvindex...</div>
 				<div class="display" id="humidityindex">Loading location humidity index...</div>
-				<div class="display" id="windindex">Loading location wind index...</div>
-				<div class="display" id="windDegrees">Loading location wind degrees...</div>
 				<div class="display" id="pressure">Loading location pressure...</div>
 				<div class="display" id="visibility">Loading location visibility...</div>
-
+			-->
 			</div>
 		</div>
 
 
 	</div>
-
-
-
 </body>
 </html>
