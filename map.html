@@ -91,13 +91,21 @@
 				<div class="display"><img src="" id="TodayIcon" width="100" height="100"></div>
 			</div>
 			<div class="col-md-2">
-				<div class="display" id="TodayTemp">Loading location temperature...</div>
+				<div class="display" id="TodayTemp"><i class="fas fa-thermometer-half"></i>Loading location temperature...</div>
 			</div>
 			<div class="col-md-4">
-				<div class="display" id="windindex">Loading location wind speed...</div>
-				<div class="display" id="windDegree">Loading location wind degrees...</div>
-				<div class="display"><i class="fas fa-location-arrow" id="windDirection"></i></div>
+				
+				<div class="display" id="windindex"><i class="fas fa-wind"></i>Loading location wind speed...</div>
 
+				<div class="display" id="windDegree">
+					Loading location wind degrees...
+					<i class="fas fa-location-arrow" id="windDirection" style="transform: rotate(-45deg)"></i>
+				</div>
+
+
+				<!--
+				<div class="display"><i class="fas fa-location-arrow" id="windDirection"></i></div>
+				-->
 			<!--
 				<div class="display" id="rainfall">Loading location rainfall...</div>
 				<div class="display" id="uvindex">Loading location uvindex...</div>

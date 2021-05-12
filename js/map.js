@@ -566,14 +566,13 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
         
 
         document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
-        document.getElementById("TodayTemp").innerHTML = whereNear(temperature)+ "°C";
+        document.getElementById("TodayTemp").innerHTML = "<i class='fas fa-thermometer-half'></i> " + whereNear(temperature)+ "°C";
         
-        
-        
+     
         getDirection( parseInt(localStorage.getItem("windDegree")) );
-        document.getElementById("windDirection").style.transform = "rotate(" + (parseInt(localStorage.getItem("windDegree"))-45) + "deg)" ;
-        document.getElementById("windDegree").innerHTML = localStorage.getItem("windDegree") + "°";
-        document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
+		document.getElementById("windDegree").innerHTML = localStorage.getItem("windDegree") + "° <i class='fas fa-location-arrow' id='windDirection' ></i>";
+        document.getElementById("windDirection").style.transform = "rotate(" + (parseInt(localStorage.getItem("windDegree"))-45) + "deg)" ;        
+        document.getElementById("windindex").innerHTML =  "<i class='fas fa-wind'></i> " + localStorage.getItem("windSpeed")*10 + "m/s";
 
         /* not displayed weather information
 		document.getElementById("rainfall").innerHTML = whereNear(rainfall)+ "mm";
