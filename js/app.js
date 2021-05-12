@@ -78,6 +78,8 @@ function initialize() {
         setInterval(function(){        
             retrieveWeather();    }, 5000);
         setTimeout(function(){showChart();},1000);
+        setInterval(function(){
+            sunTime();  },60000);
         getWeather();
        
         
