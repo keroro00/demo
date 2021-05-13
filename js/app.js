@@ -400,7 +400,10 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
         
         document.getElementById("humidityindex").innerHTML =  humidity.data[0].value + "%";
         document.getElementById("windindex").innerHTML =  localStorage.getItem("windSpeed") + "m/s";
-        
+        //new code
+        document.getElementById("scrollInfo").innerHTML = whereNear(temperature)+ "°C";
+        document.getElementById("scrollIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
+        //new code
 
         getDirection( parseInt(localStorage.getItem("windDegree")) );
         document.getElementById("windDirection").style.transform = "rotate(" + (parseInt(localStorage.getItem("windDegree"))-45) + "deg)" ;
@@ -667,5 +670,15 @@ function getWeather() {
     request.send();
 }
 
-
+//scroll react
+function scrollShow(){
+    var whenReact = document.getElementById('main').scrollTop;
+    //console.log(whenReact);
+    //when react:400
+    if (whenReact>350){
+      document.getElementById('scrollTop').style.display = 'block';
+    }else{
+      document.getElementById('scrollTop').style.display = 'none';
+    }
+}
 
