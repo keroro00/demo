@@ -609,7 +609,6 @@ function retrieveWeather() {
             const localStorage = window.localStorage;
             if (localStorage) {
                 localStorage.setItem("temperature", JSON.stringify(temperature));
-                localStorage.setItem("icon", JSON.stringify(TodayIcon));
                 localStorage.setItem("rainfall", JSON.stringify(rainfall));
                 localStorage.setItem("uvindex", JSON.stringify(uvindex));
                 localStorage.setItem("humidity", JSON.stringify(humidity));
@@ -635,7 +634,7 @@ function whereNear(data){
 	        latitudeOfUser = localStorage.getItem("defaultLatitude");
 	        longitudeOfUser = localStorage.getItem("defaultLongitude");
 	    }
-	    for (i=0;i<9;i++){
+	    for (i=0;i<26;i++){
 	        x = latitudeOfStation[i]-latitudeOfUser;
 	        y = longitudeOfStation[i]-longitudeOfUser;
 	        var Distance = Math.sqrt((x*x)+(y*y));
