@@ -675,7 +675,7 @@ function scrollShow(){
     var whenReact = document.getElementById('main').scrollTop;
     //console.log(whenReact);
     //when react:400
-    if (whenReact>350){
+    if (whenReact>330){
       document.getElementById('scrollTop').style.display = 'block';
     }else{
       document.getElementById('scrollTop').style.display = 'none';
