@@ -565,7 +565,6 @@ function displayToday(todayIcon,temperature,rainfall,uvindex,humidity){
     setTimeout(function(){
         
 
-        document.getElementById("TodayIcon").src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic"+todayIcon+".png";
         document.getElementById("TodayTemp").innerHTML = "<i class='fas fa-thermometer-half'></i> " + whereNear(temperature)+ "°C";
         
      
