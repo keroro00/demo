@@ -283,7 +283,7 @@ function whereNear(data){
             latitudeOfUser = localStorage.getItem("defaultLatitude");
             longitudeOfUser = localStorage.getItem("defaultLongitude");
         }
-        for (i=0;i<9;i++){
+        for (i=0;i<26;i++){
             x = latitudeOfStation[i]-latitudeOfUser;
             y = longitudeOfStation[i]-longitudeOfUser;
             var Distance = Math.sqrt((x*x)+(y*y));
