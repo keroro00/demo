@@ -107,3 +107,21 @@ p,h5{
   width: 100%;
   height: 75%;
 }
+
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  padding: 20px;
+  font-size: 20px;
+  display: none;
+
+}
+
+
+  td.seper{
+    padding: 10px
+
+  }
